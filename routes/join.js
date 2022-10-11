@@ -7,7 +7,7 @@ const User = require('../models/user');
 const router = express.Router();
 
 router.post('/', async (req, res, next) => {
-  const { email, name , password, nick, className, phoneNum   } = req.body;
+  const { email, name , password, className, phoneNum   } = req.body;
   try {
     const exUser = await User.findOne({ where: { email } });
     if (exUser) {
@@ -18,7 +18,6 @@ router.post('/', async (req, res, next) => {
           email,
           name ,
           password: hash,
-          nick,
           className,
           phoneNum
         });
