@@ -4,16 +4,6 @@ const Sequelize = require('sequelize');
 module.exports = class Student extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      // stuId: {
-      //   type: Sequelize.INTEGER.UNSIGNED,
-      //   allowNull: false,
-      //   unique: true,
-      // },
-      // teachId: {
-      //   type: Sequelize.INTEGER.UNSIGNED,
-      //   allowNull: false,
-      //   unique: false,
-      // },
       stuName: {
         type: Sequelize.STRING(20),
         allowNull: false,
@@ -51,6 +41,8 @@ module.exports = class Student extends Sequelize.Model {
 // 2. 테이블 간 관계설정 (사용법)
   static associate(db) {
     db.Student.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
+    db.Student.hasMany(db.Timetable, { foreignKey: 'studentId', sourceKey: 'id' });
+    db.Student.hasMany(db.Schedule, { foreignKey: 'studentId', sourceKey: 'id' });
   }
 };
 
