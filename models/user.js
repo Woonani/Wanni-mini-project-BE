@@ -3,44 +3,61 @@ const Sequelize = require('sequelize');
 module.exports = class User extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      departmentId: {
-        type: Sequelize.INTEGER,
-      },
-      name: {
-        type: Sequelize.STRING(100),
-      },
-      userid: {
-        type: Sequelize.STRING(255),
-        unique: true,
+      logId: {
+        type: Sequelize.STRING(20),
         allowNull: false,
+        unique: true,
       },
       password: {
-        type: Sequelize.STRING(500),
-        allowNull: false,
-      },
-      role: {
         type: Sequelize.STRING(20),
+        allowNull: false,
+        unique: false,
       },
-      email: {
-        type: Sequelize.STRING(255),
+      name: {
+        type: Sequelize.STRING(20),
+        allowNull: false,
+        unique: false,
       },
-      phone: {
-        type: Sequelize.STRING(255),
+      className: {
+        type: Sequelize.STRING(30),
+        allowNull: false,
+        unique: false,
       },
-      updatedPwDate: {
-        type: Sequelize.DATE,
+      phoneNum: {
+        type: Sequelize.INTEGER(11),
+        allowNull: false,
+        unique: true,
       },
+      // age: {
+      //   type: Sequelize.INTEGER.UNSIGNED,
+      //   allowNull: false,
+      // },
+      // married: {
+      //   type: Sequelize.BOOLEAN,
+      //   allowNull: false,
+      // },
+      // comment: {
+      //   type: Sequelize.TEXT,
+      //   allowNull: true,
+      // },
+      // created_at: {
+      //   type: Sequelize.DATE,
+      //   allowNull: false,
+      //   defaultValue: Sequelize.NOW,
+      // },
     }, {
       sequelize,
-      // tableName: 'tableName', // table명을 수동으로 생성 함
-      // freezeTableName: true, // true: table명의 복수형 변환을 막음
-      underscored: true, // true: underscored, false: camelCase
-      timestamps: true, // createAt, updatedAt
-      paranoid: true, // deletedAt
+      timestamps: false,
+      underscored: false,
+      modelName: 'User',
+      tableName: 'users',
+      paranoid: false,
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     });
   }
 
   static associate(db) {
-    db.User.belongsTo(db.Department, { foreignKey: { name: 'departmentId', onDelete: 'SET NULL', as: 'Department' } });
+    db.User.hasMany(db.Student, { foreignKey: 'teachId', sourceKey: 'id' });
   }
 };
