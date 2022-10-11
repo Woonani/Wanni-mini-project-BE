@@ -21,17 +21,29 @@ db.Sequelize = Sequelize;
 // 외부입력??? -> 맵핑된 테이블 모델 가져오기 (Object relation mapping)
 const User = require('./user');
 const Student = require('./student');
+const Timetable = require('./timetable');
+const Schedule = require('./schedule');
+const Comment = require('./comment');
 
 // 디비객체에 모델 몰아넣기
 db.User = User;
 db.Student = Student;
+db.Timetable = Timetable;
+db.Schedule = Schedule;
+db.Comment = Comment;
 
 // 시퀄라이즈 init 호출 (super.init)
 User.init(sequelize);
 Student.init(sequelize);
+Timetable.init(sequelize);
+Schedule.init(sequelize);
+Comment.init(sequelize);
 
 // 시퀄라이즈 hasMany 호출
 User.associate(db);
 Student.associate(db);
+Timetable.associate(db);
+Schedule.associate(db);
+Comment.associate(db);
 
 module.exports = db;

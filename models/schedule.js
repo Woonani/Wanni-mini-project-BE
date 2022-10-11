@@ -1,39 +1,39 @@
 const Sequelize = require('sequelize');
 
-module.exports = class User extends Sequelize.Model {
+module.exports = class Schedule extends Sequelize.Model {
   static init(sequelize) {
-    return super.init({
-      email: {
+    return super.init({   
+      date: {
         type: Sequelize.STRING(20),
         allowNull: false,
-        unique: true,
-      },
-      password: {
+        unique: false,
+        },   
+      day: {
         type: Sequelize.STRING(20),
         allowNull: false,
         unique: false,
       },
-      name: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-        unique: false,
-      },
-      className: {
+      lesson: {
         type: Sequelize.STRING(30),
         allowNull: false,
         unique: false,
       },
-      phoneNum: {
-        type: Sequelize.INTEGER(11),
+      attendance: {
+        type: Sequelize.STRING(30),
         allowNull: false,
-        unique: true,
+        unique: false,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
     }, {
       sequelize,
       timestamps: false,
       underscored: false,
-      modelName: 'User',
-      tableName: 'users',
+      modelName: 'Schedule',
+      tableName: 'schedules',
       paranoid: false,
       charset: 'utf8',
       collate: 'utf8_general_ci',
@@ -41,8 +41,8 @@ module.exports = class User extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.User.hasMany(db.Student, { foreignKey: 'teachId', sourceKey: 'id' });
-    db.User.hasMany(db.Timetable, { foreignKey: 'teachId', sourceKey: 'id' });
-    db.User.hasMany(db.Schedule, { foreignKey: 'teachId', sourceKey: 'id' });
-  }
+    db.Schedule.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
+    db.Schedule.belongsTo(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
+  
+}
 };
