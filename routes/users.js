@@ -1,3 +1,4 @@
+//회원가입과 student 입력이 같이 있음
 const express = require('express');
 const User = require('../models/user');
 const Student = require('../models/student');

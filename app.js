@@ -1,9 +1,13 @@
+//라이브러리 선언
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
+
+// 라우터 연결
 const indexRouter = require('./routes');
 const usersRouter = require('./routes/users');
+const joinRouter = require('./routes/join');
 // const commentsRouter = require('./routes/students');
 //
 const app = express();
@@ -26,13 +30,18 @@ sequelize.sync({ force: false })
     console.error(err);
   });
 
+// 미들웨어
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
+// 라우터 미들웨어 등록
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/join', joinRouter);
+
 // app.use('/comments', commentsRouter);
 
 app.use((req, res, next) => {
