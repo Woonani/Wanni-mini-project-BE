@@ -3,15 +3,18 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
-const dotenv = require('dotenv'); //*중요!
+const dotenv = require('dotenv'); 
+const cors = require('cors');
 
-dotenv.config(); //*중요!
+dotenv.config(); 
 
 // 라우터 연결
 const indexRouter = require('./routes');
 const usersRouter = require('./routes/users');
 const joinRouter = require('./routes/join');
 const loginRouter = require('./routes/login');
+const userEditRouter = require('./routes/useredit');
+// const userDeleteRouter = require('./routes/useredit');
 // const commentsRouter = require('./routes/students');
 //
 const app = express();
@@ -39,13 +42,14 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors());
 
 // 라우터 미들웨어 등록
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/join', joinRouter);
 app.use('/login', loginRouter);
+app.use('/edit', userEditRouter);
 
 // app.use('/comments', commentsRouter);
 
