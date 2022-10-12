@@ -28,3 +28,14 @@ POST http://localhost:3001/login
     "message": "토큰이 발급되었습니다",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hbmFAbi5jb20iLCJpZCI6MSwiaWF0IjoxNjY1NDg5MTc4LCJleHAiOjE2NjU2NjkxNzgsImlzcyI6InRlYW0ifQ.3YBvjMvfg54422U2y2bCzAdw3TlxyPHD4AcAnwtHrs8"
 }
+======================================
+{
+    "email" : "honey@n.com",
+    "password" : "1234"
+
+}
+
+{
+    "message": "토큰이 발급되었습니다",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbmV5QG4uY29tIiwiaWQiOjMsImlhdCI6MTY2NTU0NjgyMSwiZXhwIjoxNjY1NzI2ODIxLCJpc3MiOiJ0ZWFtIn0.u8RFHZLk2ClPs0szeTBK2ZXbhti85WZPNs43nk2MBqM"
+}
