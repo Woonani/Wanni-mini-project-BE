@@ -14,7 +14,7 @@ const usersRouter = require('./routes/users');
 const joinRouter = require('./routes/join');
 const loginRouter = require('./routes/login');
 const userEditRouter = require('./routes/useredit');
-// const userDeleteRouter = require('./routes/useredit');
+const userDelRouter = require('./routes/userdel');
 // const commentsRouter = require('./routes/students');
 //
 const app = express();
@@ -50,6 +50,7 @@ app.use('/users', usersRouter);
 app.use('/join', joinRouter);
 app.use('/login', loginRouter);
 app.use('/edit', userEditRouter);
+app.use('/deluser', userDelRouter);
 
 // app.use('/comments', commentsRouter);
 

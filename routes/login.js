@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken'); //*중요!
+const ErrorResponse = require('../utils/errorResponse')
 
 
 const router = express.Router();
@@ -35,6 +36,37 @@ router.post('/', async (req, res, next) => {
     return next(error);
   }
 });
+router.route('/me')
+  .post(async (req, res, next) => {
+    // 토큰 받아오기
+    //2. 토큰 id 구하기
+    //3. 토큰 id로 유저정보 찾기
+    //4. 유저정보 프론트에 주기
+    const user = req.user
+    let token
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1]
+  }
+  if (!token) {
+    return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    req.user = await User.findByPk(decoded.id)
+    
+    res.status(200).json({ success: true, data: user })
+  } catch (err) {
+    console.log(err)
+    return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+} ) 
 
 // router.post('/login', isNotLoggedIn, (req, res, next) => {
 //   passport.authenticate('local', (authError, user, info) => {

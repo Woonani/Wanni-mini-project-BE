@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const { verifyToken } = require('../library/middlewares');
-
+const bcrypt = require('bcrypt');
 const router = express.Router();
 
 router.patch('/:userId', verifyToken, async (req, res, next) => {
@@ -9,10 +9,10 @@ router.patch('/:userId', verifyToken, async (req, res, next) => {
       const {password, name, className, phoneNum} = req.body;
 
       console.log(password, name, className, phoneNum)
-
+      const hash = await bcrypt.hash(password, 12);
       const updatedCount = 
       await User.update({ 
-        password,
+        password: hash,
         name, 
         className, 
         phoneNum },
