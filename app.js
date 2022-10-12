@@ -3,11 +3,15 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
+const dotenv = require('dotenv'); //*중요!
+
+dotenv.config(); //*중요!
 
 // 라우터 연결
 const indexRouter = require('./routes');
 const usersRouter = require('./routes/users');
 const joinRouter = require('./routes/join');
+const loginRouter = require('./routes/login');
 // const commentsRouter = require('./routes/students');
 //
 const app = express();
@@ -41,6 +45,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/join', joinRouter);
+app.use('/login', loginRouter);
 
 // app.use('/comments', commentsRouter);
 
