@@ -1,0 +1,30 @@
+# 
+POST http://localhost:3001/join
+
+{
+    "email" : "nana@n.com",
+    "name" : "nana",
+    "password" : "1234",
+    "className": "haha",
+    "phoneNum" : "01053532194"
+}
+
+{
+    "code": 201,
+    "message": "success"
+}
+
+
+#
+POST http://localhost:3001/login
+
+{
+    "email" : "nana@n.com",
+    "password" : "1234"
+
+}
+
+{
+    "message": "토큰이 발급되었습니다",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hbmFAbi5jb20iLCJpZCI6MSwiaWF0IjoxNjY1NDg5MTc4LCJleHAiOjE2NjU2NjkxNzgsImlzcyI6InRlYW0ifQ.3YBvjMvfg54422U2y2bCzAdw3TlxyPHD4AcAnwtHrs8"
+}
