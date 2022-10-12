@@ -1,9 +1,9 @@
-//회원가입과 student 입력이 같이 있음
 const express = require('express');
 const User = require('../models/user');
-const Student = require('../models/student');
+// const Student = require('../models/student');
 
 const router = express.Router();
+
 
 router.route('/')
   .get(async (req, res, next) => {
@@ -15,19 +15,29 @@ router.route('/')
       next(err);
     }
   })
+  // 유저 데이터 가져오기
   .post(async (req, res, next) => {
     try {
-      const user = await User.create({
-        name: req.body.name,
-        // age: req.body.age,
-        // married: req.body.married,
-      });
+      const user = req.body
+
       console.log(user);
-      res.status(201).json(user);
+      res.status(201).json({ success: true, data: user });
     } catch (err) {
       console.error(err);
       next(err);
     }
+    // try {
+    //   const user = await User.create({
+    //     name: req.body.name,
+    //     // age: req.body.age,
+    //     // married: req.body.married,
+    //   });
+    //   console.log(user);
+    //   res.status(201).json(user);
+    // } catch (err) {
+    //   console.error(err);
+    //   next(err);
+    // }
   });
 
 router.get('/:id/students', async (req, res, next) => {
