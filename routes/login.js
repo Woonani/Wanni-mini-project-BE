@@ -38,11 +38,11 @@ router.post('/', async (req, res, next) => {
 });
 router.route('/me')
   .post(async (req, res, next) => {
-    // 토큰 받아오기
-    //2. 토큰 id 구하기
-    //3. 토큰 id로 유저정보 찾기
-    //4. 유저정보 프론트에 주기
-    const user = req.user
+    // 1. 토큰 받아오기
+    // 2. 토큰 id 구하기
+    // 3. 토큰 id로 유저정보 찾기
+    // 4. 유저정보 프론트에 주기
+    const user = {}
     let token
 
   if (
@@ -60,7 +60,11 @@ router.route('/me')
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
     req.user = await User.findByPk(decoded.id)
-    
+    // console.log(req.user)
+    user.id = req.user.dataValues.id
+    user.name = req.user.dataValues.name
+    user.className = req.user.dataValues.className
+    // console.log(user)
     res.status(200).json({ success: true, data: user })
   } catch (err) {
     console.log(err)
