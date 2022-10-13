@@ -3,11 +3,12 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken'); //*중요!
 const ErrorResponse = require('../utils/errorResponse')
+const { verifyToken } = require('../library/middlewares');
 
 
 const router = express.Router();
 
-router.post('/logout', async (req, res, next) => {
+router.post('/logout',  verifyToken, async (req, res, next) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 2 * 1000),
     httpOnly: true
