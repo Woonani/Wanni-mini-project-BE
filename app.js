@@ -10,11 +10,8 @@ dotenv.config();
 
 // 라우터 연결
 const indexRouter = require('./routes');
+const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
-const joinRouter = require('./routes/join');
-const loginRouter = require('./routes/login');
-const userEditRouter = require('./routes/useredit');
-const userDelRouter = require('./routes/userdel');
 const psCheckRouter = require('./routes/psCheck');
 // const commentsRouter = require('./routes/students');
 //
@@ -47,11 +44,9 @@ app.use(cors());
 
 // 라우터 미들웨어 등록
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
-app.use('/join', joinRouter);
-app.use('/login', loginRouter);
-app.use('/edit', userEditRouter);
-app.use('/userdel', userDelRouter);
+
 app.use('/psCheck', psCheckRouter);
 
 // app.use('/comments', commentsRouter);
