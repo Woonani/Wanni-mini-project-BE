@@ -9,12 +9,17 @@ const { verifyToken } = require('../library/middlewares');
 const router = express.Router();
 
 router.post('/logout',  verifyToken, async (req, res, next) => {
-  res.cookie('token', 'none', {
-    expires: new Date(Date.now() + 2 * 1000),
-    httpOnly: true
-  })
+  try {
+    res.cookie('token', 'none', {
+      expires: new Date(Date.now() + 2 * 1000),
+      httpOnly: true
+   })
 
-  res.status(200).json({ success: true, data: {} })
+    res.status(200).json({ success: true, message: '로그아웃 되었습니다.' })
+
+  } catch (error) {
+    console.error(error);
+  }
 })
 
   
