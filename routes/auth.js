@@ -136,7 +136,7 @@ router.delete('/:id', verifyToken, async (req, res)=>{
       const deleteUser = await User.findOne({where: { id: req.decoded.id}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
       console.log('deleteUser: '+ deleteUser);
       if(deleteUser){
-        await User.destroy({where: {id: deleteUser.id}});
+        await User.destroy({where: {id: req.params.id}});
         res.json({
             code: 200,
             message: ' 회원 탈퇴 성공!',
