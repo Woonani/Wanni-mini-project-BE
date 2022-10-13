@@ -16,6 +16,7 @@ const loginRouter = require('./routes/login');
 // const logoutRouter = require('./routes/logout');
 const userEditRouter = require('./routes/useredit');
 const userDelRouter = require('./routes/userdel');
+const psCheckRouter = require('./routes/psCheck');
 // const commentsRouter = require('./routes/students');
 //
 const app = express();
@@ -53,6 +54,7 @@ app.use('/login', loginRouter);
 // app.use('/logout', logoutRouter);
 app.use('/edit', userEditRouter);
 app.use('/userdel', userDelRouter);
+app.use('/psCheck', psCheckRouter);
 
 // app.use('/comments', commentsRouter);
 
