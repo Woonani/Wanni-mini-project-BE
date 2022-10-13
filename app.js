@@ -52,7 +52,7 @@ app.use('/join', joinRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/edit', userEditRouter);
-app.use('/deluser', userDelRouter);
+app.use('/userdel', userDelRouter);
 
 // app.use('/comments', commentsRouter);
 
