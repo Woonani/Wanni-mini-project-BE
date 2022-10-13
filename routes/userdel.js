@@ -5,7 +5,7 @@ const { verifyToken } = require('../library/middlewares');
 const router = express.Router();
 
 
-router.delete('/', verifyToken, async (req, res)=>{
+router.delete('/:id', verifyToken, async (req, res)=>{
     try {
       const deleteUser = await User.findOne({where: { id: req.decoded.id}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
       console.log('deleteUser: '+ deleteUser);

@@ -50,7 +50,7 @@ app.use('/users', usersRouter);
 app.use('/join', joinRouter);
 app.use('/login', loginRouter);
 app.use('/edit', userEditRouter);
-app.use('/deluser', userDelRouter);
+app.use('/userdel', userDelRouter);
 
 // app.use('/comments', commentsRouter);
 
