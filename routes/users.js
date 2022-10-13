@@ -11,7 +11,14 @@ router.get('/:id', verifyToken, async (req, res, next) => {
   try {
     // const decoded = jwt.verify(token, process.env.JWT_SECRET)
     // user.data = await User.findByPk(req.params.id)
-    user.data = await User.findByPk(req.params.id)
+    req.user  = await User.findByPk(req.params.id)
+
+    user.id = req.user.dataValues.id
+    user.email = req.user.dataValues.email
+    user.name = req.user.dataValues.name
+    user.className = req.user.dataValues.className
+    user.phoneNum = req.user.dataValues.phoneNum
+    user.password = req.user.dataValues.password
 
     // user.data= req.user.dataValues
 
