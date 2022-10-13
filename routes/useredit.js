@@ -3,6 +3,40 @@ const User = require('../models/user');
 const { verifyToken } = require('../library/middlewares');
 const bcrypt = require('bcrypt');
 const router = express.Router();
+const ErrorResponse = require('../utils/errorResponse')
+const jwt = require('jsonwebtoken'); 
+
+
+router
+  .get('/me',async (req, res, next) => {
+  const user = {}
+    let token
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1]
+  }
+  if (!token) {
+    return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    req.user = await User.findByPk(decoded.id)
+    // console.log(req.user)
+    user.data= req.user.dataValues
+   
+    console.log(user)
+    res.status(200).json({ success: true, data: user })
+  } catch (err) {
+    console.log(err)
+    return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+});
 
 router.patch('/:userId', verifyToken, async (req, res, next) => {
     try {
