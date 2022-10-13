@@ -64,6 +64,7 @@ router.route('/me')
     user.id = req.user.dataValues.id
     user.name = req.user.dataValues.name
     user.className = req.user.dataValues.className
+    // user.password = req.user.dataValues.password
     // console.log(user)
     res.status(200).json({ success: true, data: user })
   } catch (err) {
