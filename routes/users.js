@@ -2,39 +2,57 @@
 const express = require('express');
 const User = require('../models/user');
 const Student = require('../models/student');
+const { verifyToken } = require('../library/middlewares')
 
 const router = express.Router();
 
-router.route('/me/')
-  .post(async (req, res, next) => {
-    // 토큰 받아오기
-    //2. 토큰 id 구하기
-    //3. 토큰 id로 유저정보 찾기
-    //4. 유저정보 프론트에 주기
-    const user = req.user
-    let token
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1]
-  }
-  if (!token) {
-    return next(new ErrorResponse('Not authorized to access this route', 401))
-  }
-
+router.get('/:id', verifyToken, async (req, res, next) => {
+  const user = {}
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    // user.data = await User.findByPk(req.params.id)
+    user.data = await User.findByPk(req.params.id)
 
-    req.user = await User.findOne(decoded.id)
-    
+    // user.data= req.user.dataValues
+
+    console.log(user);
     res.status(200).json({ success: true, data: user })
   } catch (err) {
-    return next(new ErrorResponse('Not authorized to access this route', 401))
+    console.error(err);
+    next(err);
   }
-} ) 
+});
+
+// router.route('/me/')
+//   .post(async (req, res, next) => {
+//     // 토큰 받아오기
+//     //2. 토큰 id 구하기
+//     //3. 토큰 id로 유저정보 찾기
+//     //4. 유저정보 프론트에 주기
+//     const user = req.user
+//     let token
+
+//   if (
+//     req.headers.authorization &&
+//     req.headers.authorization.startsWith('Bearer')
+//   ) {
+//     token = req.headers.authorization.split(' ')[1]
+//   }
+//   if (!token) {
+//     return next(new ErrorResponse('Not authorized to access this route', 401))
+//   }
+
+//   try {
+//     // Verify token
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+//     req.user = await User.findOne(decoded.id)
+    
+//     res.status(200).json({ success: true, data: user })
+//   } catch (err) {
+//     return next(new ErrorResponse('Not authorized to access this route', 401))
+//   }
+// } ) 
    
      
     
