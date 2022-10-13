@@ -24,7 +24,11 @@ router.post('/:id', async (req, res, next) => {
       boolean,
     });
   }else{
-    res.status(403).send('비밀번호를 확인해주세요!');
+    
+    return res.status(200).json({
+      message: '비밀번호를 확인해주세요!',
+      boolean,
+    })
   }
   } catch (error) {
     console.error(error);
