@@ -4,11 +4,9 @@ const router = express.Router();
 const jwt = require('jsonwebtoken'); //*중요!
 const bcrypt = require('bcrypt');
 const { verifyToken } = require('../library/middlewares');
-
+const { Student,User } = require('../models')
 const ErrorResponse = require('../utils/errorResponse')
-
-const { Student } = require('../models');
-const User = require('../models/user');
+// const Student = require('../models/student');
 
 
 
@@ -58,53 +56,29 @@ router.post('/:id', verifyToken, async (req, res, next) => {
   }
   });
 
-// //   router
-// //   .get('/:id', verifyToken, async (req, res, next) => {
+router.get('/:id/info/all', verifyToken, async (req, res, next) => {
+  
+  const student = {}
+  
+  let token
+  try {
 
-// //     const student = {}
-// //   try {
-// //     // const decoded = jwt.verify(token, process.env.JWT_SECRET)
-// //     req.student = await Student.findAll({ where : {'teachId' : req.params.id} })
+    req.student = await Student.findAll({
+        attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
+
+        where : {'teachId' : req.params.id}
+      })
     
 
-// //     student.stuName = req.student.dataValues.stuName
-// //     // student.stuGrade = req.student.dataValues.stuGrade
-// //     // student.school = req.student.dataValues.school
-// //     // student.phoneNum = req.student.dataValues.phoneNum
-// //     // student.etc = req.student.dataValues.etc
-// //     console.log(req.student)
-// //     res.status(200).json({ success: true, data: student })
-// //   } catch (err) {
-// //     console.log(student, err)
-// //     res.status(400).json({ success: false, data: student })
-// //     // return next(new ErrorResponse('Not authorized to access this route', 401))
-// //   }
-// // } ) 
+    res.status(200).json({ success: true, data: req.student })
+  } catch (err) {
+
+    res.status(400).json({ success: false})
+    // return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+} ) 
 
 
-
-// // students/:id
-// router.get('/:id', verifyToken, async (req, res, next) => {
-//     const student = {}
-//     // let token
-
-//   try {
-//     // Verify token
-//     // const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-//     req.student = await Student.findOne( {where: { teachId: req.params.id } })
-//     // console.log(req.user)
-//     student.id = req.user.dataValues.id
-//     student.stuName = req.user.dataValues.stuName
-//     // student.className = req.user.dataValues.className
-//     // user.password = req.user.dataValues.password
-//     // console.log(user)
-//     res.status(200).json({ success: true, data: student })
-//   } catch (err) {
-//     console.log(err)
-//     return next(new ErrorResponse('Not authorized to access this route', 401))
-//   }
-// } ) 
   
 // //학생정보 수정 /students/:stuId     // 학생 id로 조회해야 함
 router.patch('/:stuId', verifyToken, async (req, res, next) => {
