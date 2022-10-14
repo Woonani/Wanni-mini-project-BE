@@ -58,69 +58,48 @@ router.post('/:id', verifyToken, async (req, res, next) => {
   }
   });
 
-//   //login    /auth/login
-//   router.post('/login', async (req, res, next) => {
-//     try {
-//       const { email, password } = req.body;  // 입력받은 이메일과 비밀번호가 담겨 있음.
-//       const user = await User.findOne({ where: { email } });
-//     if (!user) {
-//       res.status(404).send(' 회원정보를 확인해주세요')
-//     }
-//     const hash =  await bcrypt.compare(password, user.password);
-//     if(hash){
-//     const token = jwt.sign({
-//       email,
-//       id: user.id,
-//     }, process.env.JWT_SECRET, {  //*중요!
-//       expiresIn: '3000m', // 3000분
-//       issuer: 'team',
-//     });
-//     console.log(token);
-//     return res.status(200).json({
-//       message: '토큰이 발급되었습니다',
-//       token,
-//     });
-//   }else{
-//     res.status(403).send('로그인 정보를 확인해주세요!');
-//   }
-//   } catch (error) {
-//     console.error(error);
-//     return next(error);
-//   }
-// });
+// //   router
+// //   .get('/:id', verifyToken, async (req, res, next) => {
 
-// // auth/login/me
-// router.route('/login/me')
-//   .post(async (req, res, next) => {
-//     // 1. 토큰 받아오기
-//     // 2. 토큰 id 구하기
-//     // 3. 토큰 id로 유저정보 찾기
-//     // 4. 유저정보 프론트에 주기
-//     const user = {}
-//     let token
+// //     const student = {}
+// //   try {
+// //     // const decoded = jwt.verify(token, process.env.JWT_SECRET)
+// //     req.student = await Student.findAll({ where : {'teachId' : req.params.id} })
+    
 
-//   if (
-//     req.headers.authorization &&
-//     req.headers.authorization.startsWith('Bearer')
-//   ) {
-//     token = req.headers.authorization.split(' ')[1]
-//   }
-//   if (!token) {
-//     return next(new ErrorResponse('Not authorized to access this route', 401))
-//   }
+// //     student.stuName = req.student.dataValues.stuName
+// //     // student.stuGrade = req.student.dataValues.stuGrade
+// //     // student.school = req.student.dataValues.school
+// //     // student.phoneNum = req.student.dataValues.phoneNum
+// //     // student.etc = req.student.dataValues.etc
+// //     console.log(req.student)
+// //     res.status(200).json({ success: true, data: student })
+// //   } catch (err) {
+// //     console.log(student, err)
+// //     res.status(400).json({ success: false, data: student })
+// //     // return next(new ErrorResponse('Not authorized to access this route', 401))
+// //   }
+// // } ) 
+
+
+
+// // students/:id
+// router.get('/:id', verifyToken, async (req, res, next) => {
+//     const student = {}
+//     // let token
 
 //   try {
 //     // Verify token
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+//     // const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-//     req.user = await User.findByPk(decoded.id)
+//     req.student = await Student.findOne( {where: { teachId: req.params.id } })
 //     // console.log(req.user)
-//     user.id = req.user.dataValues.id
-//     user.name = req.user.dataValues.name
-//     user.className = req.user.dataValues.className
+//     student.id = req.user.dataValues.id
+//     student.stuName = req.user.dataValues.stuName
+//     // student.className = req.user.dataValues.className
 //     // user.password = req.user.dataValues.password
 //     // console.log(user)
-//     res.status(200).json({ success: true, data: user })
+//     res.status(200).json({ success: true, data: student })
 //   } catch (err) {
 //     console.log(err)
 //     return next(new ErrorResponse('Not authorized to access this route', 401))
@@ -175,42 +154,5 @@ router.delete('/:stuId', verifyToken, async (req, res)=>{
 
 
 
-// router.post('/', async (req, res, next) => {
-//   try {
-//     const student = await Student.create({
-//       teachId: req.body.id,
-//       student: req.body.student,
-//     });
-//     console.log(student);
-//     res.status(201).json(student);
-//   } catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// });
-
-// router.route('/:id')
-//   .patch(async (req, res, next) => {
-//     try {
-//       const result = await Student.update({
-//         student: req.body.student,
-//       }, {
-//         where: { id: req.params.id },
-//       });
-//       res.json(result);
-//     } catch (err) {
-//       console.error(err);
-//       next(err);
-//     }
-//   })
-//   .delete(async (req, res, next) => {
-//     try {
-//       const result = await Student.destroy({ where: { id: req.params.id } });
-//       res.json(result);
-//     } catch (err) {
-//       console.error(err);
-//       next(err);
-//     }
-//   });
 
 module.exports = router;
