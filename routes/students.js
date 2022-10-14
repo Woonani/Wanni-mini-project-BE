@@ -53,7 +53,6 @@ router.post('/:id', verifyToken, async (req, res, next) => {
     }
 
   } catch (error) {
-    
     console.error(error);
     return next(error);
   }
@@ -128,50 +127,49 @@ router.post('/:id', verifyToken, async (req, res, next) => {
 //   }
 // } ) 
   
-// //edit /auth/:id
-// router.patch('/:id', verifyToken, async (req, res, next) => {
-//     try {
-//       const {password, name, className, phoneNum} = req.body;
+// //학생정보 수정 /students/:stuId     // 학생 id로 조회해야 함
+router.patch('/:stuId', verifyToken, async (req, res, next) => {
+  try {
+    const { stuName, stuGrade, school, phoneNum, etc } = req.body;
 
-//       console.log(password, name, className, phoneNum)
-//       const hash = await bcrypt.hash(password, 12);
-//       const updatedCount = 
-//       await User.update({ 
-//         password: hash,
-//         name, 
-//         className, 
-//         phoneNum },
-//         { where: {id: req.params.id }}); // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
-        
-//       console.log("updatedCount",updatedCount)
-//       res.json({
-//         code: 200,
-//         message: `수정됐습니다 : ${req.body.password} ${req.body.name} ${req.body.className} ${req.body.phoneNum}`,
-//       });
-//     } catch(error) {
-//       console.error(error);
-//       next(error);
-//     }
-//   })
+    await Student.update({ 
+      stuName, 
+      stuGrade, 
+      school,
+      phoneNum,
+      etc
+     },
+      { where: {id: req.params.stuId }}); 
+      
+    res.json({
+      code: 200,
+      message: `수정됐습니다 : ${req.body.stuName} ${req.body.stuGrade} ${req.body.school} ${req.body.phoneNum} ${req.body.etc}`,
+    });
+  } catch(error) {
+    console.error(error);
+    next(error);
+  }
+})
 
-// //delete  auth/:id
-// router.delete('/:id', verifyToken, async (req, res)=>{
-//     try {
-//       const deleteUser = await User.findOne({where: { id: req.decoded.id}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
-//       console.log('deleteUser: '+ deleteUser);
-//       if(deleteUser){
-//         await User.destroy({where: {id: req.params.id}});
-//         res.json({
-//             code: 200,
-//             message: ' 회원 탈퇴 성공!',
-//         })
-//       }else{
-//         res.status(400).send(" 삭제할 유저가 없습니다.")
-//       }
-//     } catch (error) {
-//       console.error(error);
-//     } 
-//     })
+// //delete  /students/:stuId     // 학생 id로 조회해야 함
+router.delete('/:stuId', verifyToken, async (req, res)=>{
+    try {
+      const deleteStudent = await Student.findOne({where: { id: req.params.stuId}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
+      console.log('deleteStudent: '+ deleteStudent);
+      if(deleteStudent){
+        await Student.destroy({where: {id: req.params.stuId}});
+        res.json({
+            code: 200,
+            message: ' 삭제되었습니다.',
+        })
+      }else{
+        res.status(400).send(" 삭제할 데이터가 없습니다.")
+      }
+    } catch (error) {
+      console.error(error);
+
+    } 
+    })
 
 
 
