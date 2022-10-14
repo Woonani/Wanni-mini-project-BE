@@ -19,10 +19,10 @@ module.exports = class Student extends Sequelize.Model {
         allowNull: false,
         unique: false,
       },
-      phoneNum: {
+      phoneNum: { // 부모연락처
         type: Sequelize.STRING(11),
         allowNull: false,
-        unique: false,
+        unique: false, // 형제가 다니는 경우 부모 연락처가 동일
       },
       etc: {
         type: Sequelize.STRING(500),

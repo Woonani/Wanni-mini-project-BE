@@ -11,7 +11,9 @@ const Student = require('../models/student');
 
 
 
-//학생정보 등록
+//학생정보 등록 /students/:id // db에 선생님 아이디로 저장해야 하니까
+//{ stuName, stuGrade, school, phoneNum, etc } = req.body
+
 router.post('/:id', verifyToken, async (req, res, next) => {
   const { stuName, stuGrade, school, phoneNum, etc } = req.body;
   try {
@@ -55,7 +57,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
   }
   });
 
-  //login    /auth/login
+//   //login    /auth/login
 //   router.post('/login', async (req, res, next) => {
 //     try {
 //       const { email, password } = req.body;  // 입력받은 이메일과 비밀번호가 담겨 있음.
@@ -86,77 +88,88 @@ router.post('/:id', verifyToken, async (req, res, next) => {
 //   }
 // });
 
-// auth/login/me
-router
-  .get('/info/all', verifyToken, async (req, res, next) => {
-    // 1. 토큰 받아오기
-    // 2. 토큰 id 구하기
-    // 3. 토큰 id로 유저정보 찾기
-    // 4. 유저정보 프론트에 주기
-    const student = {}
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.student = await Student.findOne(decoded.id)
-    // Verify token
-    // console.log(req.student)
-    student.stuName = req.student.dataValues.stuName
-    student.stuGrade = req.student.dataValues.stuGrade
-    student.school = req.student.dataValues.school
-    student.phoneNum = req.user.dataValues.phoneNum
-    student.etc = req.user.dataValues.etc
-    console.log(student)
-    res.status(200).json({ success: true, data: student })
-  } catch (err) {
-    console.log(student)
-    res.status(400).json({ success: false, data: student })
-    // return next(new ErrorResponse('Not authorized to access this route', 401))
-  }
-} ) 
+// // auth/login/me
+// router.route('/login/me')
+//   .post(async (req, res, next) => {
+//     // 1. 토큰 받아오기
+//     // 2. 토큰 id 구하기
+//     // 3. 토큰 id로 유저정보 찾기
+//     // 4. 유저정보 프론트에 주기
+//     const user = {}
+//     let token
+
+//   if (
+//     req.headers.authorization &&
+//     req.headers.authorization.startsWith('Bearer')
+//   ) {
+//     token = req.headers.authorization.split(' ')[1]
+//   }
+//   if (!token) {
+//     return next(new ErrorResponse('Not authorized to access this route', 401))
+//   }
+
+//   try {
+//     // Verify token
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+//     req.user = await User.findByPk(decoded.id)
+//     // console.log(req.user)
+//     user.id = req.user.dataValues.id
+//     user.name = req.user.dataValues.name
+//     user.className = req.user.dataValues.className
+//     // user.password = req.user.dataValues.password
+//     // console.log(user)
+//     res.status(200).json({ success: true, data: user })
+//   } catch (err) {
+//     console.log(err)
+//     return next(new ErrorResponse('Not authorized to access this route', 401))
+//   }
+// } ) 
   
-//edit /auth/:id
-router.patch('/:id', verifyToken, async (req, res, next) => {
-    try {
-      const {password, name, className, phoneNum} = req.body;
+// //edit /auth/:id
+// router.patch('/:id', verifyToken, async (req, res, next) => {
+//     try {
+//       const {password, name, className, phoneNum} = req.body;
 
-      console.log(password, name, className, phoneNum)
-      const hash = await bcrypt.hash(password, 12);
-      const updatedCount = 
-      await User.update({ 
-        password: hash,
-        name, 
-        className, 
-        phoneNum },
-        { where: {id: req.params.id }}); // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
+//       console.log(password, name, className, phoneNum)
+//       const hash = await bcrypt.hash(password, 12);
+//       const updatedCount = 
+//       await User.update({ 
+//         password: hash,
+//         name, 
+//         className, 
+//         phoneNum },
+//         { where: {id: req.params.id }}); // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
         
-      console.log("updatedCount",updatedCount)
-      res.json({
-        code: 200,
-        message: `수정됐습니다 : ${req.body.password} ${req.body.name} ${req.body.className} ${req.body.phoneNum}`,
-      });
-    } catch(error) {
-      console.error(error);
-      next(error);
-    }
-  })
+//       console.log("updatedCount",updatedCount)
+//       res.json({
+//         code: 200,
+//         message: `수정됐습니다 : ${req.body.password} ${req.body.name} ${req.body.className} ${req.body.phoneNum}`,
+//       });
+//     } catch(error) {
+//       console.error(error);
+//       next(error);
+//     }
+//   })
 
-//delete  auth/:id
-router.delete('/:id', verifyToken, async (req, res)=>{
-    try {
-      const deleteUser = await User.findOne({where: { id: req.decoded.id}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
-      console.log('deleteUser: '+ deleteUser);
-      if(deleteUser){
-        await User.destroy({where: {id: req.params.id}});
-        res.json({
-            code: 200,
-            message: ' 회원 탈퇴 성공!',
-        })
-      }else{
-        res.status(400).send(" 삭제할 유저가 없습니다.")
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-    })
+// //delete  auth/:id
+// router.delete('/:id', verifyToken, async (req, res)=>{
+//     try {
+//       const deleteUser = await User.findOne({where: { id: req.decoded.id}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
+//       console.log('deleteUser: '+ deleteUser);
+//       if(deleteUser){
+//         await User.destroy({where: {id: req.params.id}});
+//         res.json({
+//             code: 200,
+//             message: ' 회원 탈퇴 성공!',
+//         })
+//       }else{
+//         res.status(400).send(" 삭제할 유저가 없습니다.")
+//       }
+//     } catch (error) {
+//       console.error(error);
+//     } 
+//     })
 
 
 
