@@ -6,106 +6,110 @@ const bcrypt = require('bcrypt');
 const { verifyToken } = require('../library/middlewares');
 
 const ErrorResponse = require('../utils/errorResponse')
-
-const { Student } = require('../models');
-const User = require('../models/user');
+const Student = require('../models/student');
 
 
 
 
 //학생정보 등록
-router.post('/join', async (req, res, next) => {
-    const { email, name , password, className, phoneNum   } = req.body;
-    try {
-      const exUser = await User.findOne({ where: { email } });
-      if (exUser) {
-        res.status(403).send('이미 존재하는 email 입니다.');
+router.post('/:id', verifyToken, async (req, res, next) => {
+  const { stuName, stuGrade, school, phoneNum, etc } = req.body;
+  try {
+    const exStudentA= await Student.findOne( {where: { phoneNum: req.body.phoneNum } });
+    if(!exStudentA){
+      await Student.create({
+        stuName,
+        stuGrade,
+        school,
+        phoneNum,
+        etc,
+        teachId: req.params.id
+      });
+      res.status(201).json({
+          code: 201,
+          message: "success"
+      })      
+    } else {
+      if(exStudentA.stuName !== req.body.stuName){
+        await Student.create({
+          stuName,
+          stuGrade,
+          school,
+          phoneNum,
+          etc,
+          teachId: req.params.id
+        });
+        res.status(201).json({
+            code: 201,
+            message: "success"
+        }) 
       }else{
-          const hash = await bcrypt.hash(password, 12);
-          await User.create({
-            email,
-            name ,
-            password: hash,
-            className,
-            phoneNum
-          });
-          res.status(201).json({
-              code: 201,
-              message: "success"
-          })
+      res.status(301).send('이미 등록된 학생입니다.') 
       }
-    } catch (error) {
-      console.error(error);
-      return next(error);
     }
-  });
 
-  //login    /auth/login
-  router.post('/login', async (req, res, next) => {
-    try {
-      const { email, password } = req.body;  // 입력받은 이메일과 비밀번호가 담겨 있음.
-      const user = await User.findOne({ where: { email } });
-    if (!user) {
-      res.status(404).send(' 회원정보를 확인해주세요')
-    }
-    const hash =  await bcrypt.compare(password, user.password);
-    if(hash){
-    const token = jwt.sign({
-      email,
-      id: user.id,
-    }, process.env.JWT_SECRET, {  //*중요!
-      expiresIn: '3000m', // 3000분
-      issuer: 'team',
-    });
-    console.log(token);
-    return res.status(200).json({
-      message: '토큰이 발급되었습니다',
-      token,
-    });
-  }else{
-    res.status(403).send('로그인 정보를 확인해주세요!');
-  }
   } catch (error) {
+    
     console.error(error);
     return next(error);
   }
-});
+  });
+
+  //login    /auth/login
+//   router.post('/login', async (req, res, next) => {
+//     try {
+//       const { email, password } = req.body;  // 입력받은 이메일과 비밀번호가 담겨 있음.
+//       const user = await User.findOne({ where: { email } });
+//     if (!user) {
+//       res.status(404).send(' 회원정보를 확인해주세요')
+//     }
+//     const hash =  await bcrypt.compare(password, user.password);
+//     if(hash){
+//     const token = jwt.sign({
+//       email,
+//       id: user.id,
+//     }, process.env.JWT_SECRET, {  //*중요!
+//       expiresIn: '3000m', // 3000분
+//       issuer: 'team',
+//     });
+//     console.log(token);
+//     return res.status(200).json({
+//       message: '토큰이 발급되었습니다',
+//       token,
+//     });
+//   }else{
+//     res.status(403).send('로그인 정보를 확인해주세요!');
+//   }
+//   } catch (error) {
+//     console.error(error);
+//     return next(error);
+//   }
+// });
 
 // auth/login/me
-router.route('/login/me')
-  .post(async (req, res, next) => {
+router
+  .get('/info/all', verifyToken, async (req, res, next) => {
     // 1. 토큰 받아오기
     // 2. 토큰 id 구하기
     // 3. 토큰 id로 유저정보 찾기
     // 4. 유저정보 프론트에 주기
-    const user = {}
-    let token
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1]
-  }
-  if (!token) {
-    return next(new ErrorResponse('Not authorized to access this route', 401))
-  }
-
+    const student = {}
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-    req.user = await User.findByPk(decoded.id)
-    // console.log(req.user)
-    user.id = req.user.dataValues.id
-    user.name = req.user.dataValues.name
-    user.className = req.user.dataValues.className
-    // user.password = req.user.dataValues.password
-    // console.log(user)
-    res.status(200).json({ success: true, data: user })
+    req.student = await Student.findOne(decoded.id)
+    // Verify token
+    // console.log(req.student)
+    student.stuName = req.student.dataValues.stuName
+    student.stuGrade = req.student.dataValues.stuGrade
+    student.school = req.student.dataValues.school
+    student.phoneNum = req.user.dataValues.phoneNum
+    student.etc = req.user.dataValues.etc
+    console.log(student)
+    res.status(200).json({ success: true, data: student })
   } catch (err) {
-    console.log(err)
-    return next(new ErrorResponse('Not authorized to access this route', 401))
+    console.log(student)
+    res.status(400).json({ success: false, data: student })
+    // return next(new ErrorResponse('Not authorized to access this route', 401))
   }
 } ) 
   

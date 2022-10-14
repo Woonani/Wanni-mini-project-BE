@@ -9,13 +9,13 @@ router.post('/:id', verifyToken, async (req, res, next) => {
   // const user = {}
   const { id, inputPassword } = req.body;  // 입력받은 이메일과 비밀번호가 담겨 있음.
     try {
-      console.log(id, inputPassword)
+      // console.log(id, inputPassword)
       const user = await User.findOne({ where: { id } });
       if (!user) {
         res.status(404).send(' 유저정보가 일치하지 않습니다')
       }
       const boolean =  await bcrypt.compare(inputPassword, user.password);
-      console.log(boolean)
+      // console.log(boolean)
     
       if(boolean) {
       

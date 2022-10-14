@@ -20,7 +20,7 @@ module.exports = class Student extends Sequelize.Model {
         unique: false,
       },
       phoneNum: {
-        type: Sequelize.INTEGER(11),
+        type: Sequelize.STRING(11),
         allowNull: false,
         unique: false,
       },
