@@ -56,17 +56,16 @@ router.post('/:id', verifyToken, async (req, res, next) => {
   }
   });
 
-  router
-  .get('/:id/info/all', verifyToken, async (req, res, next) => {
-   
-    const student = {}
-   
-    let token
+router.get('/:id/info/all', verifyToken, async (req, res, next) => {
+  
+  const student = {}
+  
+  let token
   try {
 
     req.student = await Student.findAll({
         attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
-  
+
         where : {'teachId' : req.params.id}
       })
     
@@ -129,42 +128,5 @@ router.delete('/:stuId', verifyToken, async (req, res)=>{
 
 
 
-// router.post('/', async (req, res, next) => {
-//   try {
-//     const student = await Student.create({
-//       teachId: req.body.id,
-//       student: req.body.student,
-//     });
-//     console.log(student);
-//     res.status(201).json(student);
-//   } catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// });
-
-// router.route('/:id')
-//   .patch(async (req, res, next) => {
-//     try {
-//       const result = await Student.update({
-//         student: req.body.student,
-//       }, {
-//         where: { id: req.params.id },
-//       });
-//       res.json(result);
-//     } catch (err) {
-//       console.error(err);
-//       next(err);
-//     }
-//   })
-//   .delete(async (req, res, next) => {
-//     try {
-//       const result = await Student.destroy({ where: { id: req.params.id } });
-//       res.json(result);
-//     } catch (err) {
-//       console.error(err);
-//       next(err);
-//     }
-//   });
 
 module.exports = router;
