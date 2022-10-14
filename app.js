@@ -12,7 +12,7 @@ dotenv.config();
 const indexRouter = require('./routes');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
-const psCheckRouter = require('./routes/psCheck');
+const pwCheckRouter = require('./routes/pwCheck');
 // const commentsRouter = require('./routes/students');
 //
 const app = express();
@@ -47,7 +47,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 
-app.use('/psCheck', psCheckRouter);
+app.use('/pwCheck', pwCheckRouter);
 
 // app.use('/comments', commentsRouter);
 
