@@ -109,7 +109,7 @@ router.patch('/:id', verifyToken, async (req, res, next) => {
     try {
       const {password, name, className, phoneNum} = req.body;
 
-      console.log(password, name, className, phoneNum)
+      // console.log(password, name, className, phoneNum)
       const hash = await bcrypt.hash(password, 12);
       const updatedCount = 
       await User.update({ 

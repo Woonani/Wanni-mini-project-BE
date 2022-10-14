@@ -51,7 +51,6 @@ router.post('/:id', verifyToken, async (req, res, next) => {
     }
 
   } catch (error) {
-    
     console.error(error);
     return next(error);
   }
@@ -67,23 +66,64 @@ router.post('/:id', verifyToken, async (req, res, next) => {
 
     req.student = await Student.findAll({
         attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
-        // model : User,
+  
         where : {'teachId' : req.params.id}
       })
     
 
     res.status(200).json({ success: true, data: req.student })
   } catch (err) {
-    console.log(student, err)
-    res.status(400).json({ success: false, data: req.student })
+
+    res.status(400).json({ success: false})
     // return next(new ErrorResponse('Not authorized to access this route', 401))
   }
 } ) 
 
 
-
   
+// //학생정보 수정 /students/:stuId     // 학생 id로 조회해야 함
+router.patch('/:stuId', verifyToken, async (req, res, next) => {
+  try {
+    const { stuName, stuGrade, school, phoneNum, etc } = req.body;
 
+    await Student.update({ 
+      stuName, 
+      stuGrade, 
+      school,
+      phoneNum,
+      etc
+     },
+      { where: {id: req.params.stuId }}); 
+      
+    res.json({
+      code: 200,
+      message: `수정됐습니다 : ${req.body.stuName} ${req.body.stuGrade} ${req.body.school} ${req.body.phoneNum} ${req.body.etc}`,
+    });
+  } catch(error) {
+    console.error(error);
+    next(error);
+  }
+})
+
+// //delete  /students/:stuId     // 학생 id로 조회해야 함
+router.delete('/:stuId', verifyToken, async (req, res)=>{
+    try {
+      const deleteStudent = await Student.findOne({where: { id: req.params.stuId}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
+      console.log('deleteStudent: '+ deleteStudent);
+      if(deleteStudent){
+        await Student.destroy({where: {id: req.params.stuId}});
+        res.json({
+            code: 200,
+            message: ' 삭제되었습니다.',
+        })
+      }else{
+        res.status(400).send(" 삭제할 데이터가 없습니다.")
+      }
+    } catch (error) {
+      console.error(error);
+
+    } 
+    })
 
 
 
