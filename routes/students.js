@@ -4,11 +4,9 @@ const router = express.Router();
 const jwt = require('jsonwebtoken'); //*중요!
 const bcrypt = require('bcrypt');
 const { verifyToken } = require('../library/middlewares');
-
+const { Student,User } = require('../models')
 const ErrorResponse = require('../utils/errorResponse')
-
-const { Student } = require('../models');
-const User = require('../models/user');
+// const Student = require('../models/student');
 
 
 
@@ -58,74 +56,30 @@ router.post('/:id', verifyToken, async (req, res, next) => {
   }
   });
 
-//   //login    /auth/login
-//   router.post('/login', async (req, res, next) => {
-//     try {
-//       const { email, password } = req.body;  // 입력받은 이메일과 비밀번호가 담겨 있음.
-//       const user = await User.findOne({ where: { email } });
-//     if (!user) {
-//       res.status(404).send(' 회원정보를 확인해주세요')
-//     }
-//     const hash =  await bcrypt.compare(password, user.password);
-//     if(hash){
-//     const token = jwt.sign({
-//       email,
-//       id: user.id,
-//     }, process.env.JWT_SECRET, {  //*중요!
-//       expiresIn: '3000m', // 3000분
-//       issuer: 'team',
-//     });
-//     console.log(token);
-//     return res.status(200).json({
-//       message: '토큰이 발급되었습니다',
-//       token,
-//     });
-//   }else{
-//     res.status(403).send('로그인 정보를 확인해주세요!');
-//   }
-//   } catch (error) {
-//     console.error(error);
-//     return next(error);
-//   }
-// });
+  router
+  .get('/:id/info/all', verifyToken, async (req, res, next) => {
+   
+    const student = {}
+   
+    let token
+  try {
 
-// // auth/login/me
-// router.route('/login/me')
-//   .post(async (req, res, next) => {
-//     // 1. 토큰 받아오기
-//     // 2. 토큰 id 구하기
-//     // 3. 토큰 id로 유저정보 찾기
-//     // 4. 유저정보 프론트에 주기
-//     const user = {}
-//     let token
+    req.student = await Student.findAll({
+        attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
+  
+        where : {'teachId' : req.params.id}
+      })
+    
 
-//   if (
-//     req.headers.authorization &&
-//     req.headers.authorization.startsWith('Bearer')
-//   ) {
-//     token = req.headers.authorization.split(' ')[1]
-//   }
-//   if (!token) {
-//     return next(new ErrorResponse('Not authorized to access this route', 401))
-//   }
+    res.status(200).json({ success: true, data: req.student })
+  } catch (err) {
 
-//   try {
-//     // Verify token
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    res.status(400).json({ success: false})
+    // return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+} ) 
 
-//     req.user = await User.findByPk(decoded.id)
-//     // console.log(req.user)
-//     user.id = req.user.dataValues.id
-//     user.name = req.user.dataValues.name
-//     user.className = req.user.dataValues.className
-//     // user.password = req.user.dataValues.password
-//     // console.log(user)
-//     res.status(200).json({ success: true, data: user })
-//   } catch (err) {
-//     console.log(err)
-//     return next(new ErrorResponse('Not authorized to access this route', 401))
-//   }
-// } ) 
+
   
 // //학생정보 수정 /students/:stuId     // 학생 id로 조회해야 함
 router.patch('/:stuId', verifyToken, async (req, res, next) => {
