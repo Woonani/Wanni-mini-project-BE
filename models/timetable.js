@@ -13,6 +13,11 @@ module.exports = class Timetable extends Sequelize.Model {
         allowNull: false,
         unique: false,
       },
+      stuName: {
+        type: Sequelize.STRING(30),
+        allowNull: false,
+        unique: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

@@ -7,7 +7,7 @@ module.exports = class Student extends Sequelize.Model {
       stuName: {
         type: Sequelize.STRING(20),
         allowNull: false,
-        unique: false,
+        unique: true,
       },
       stuGrade: {
         type: Sequelize.INTEGER.UNSIGNED,
