@@ -6,6 +6,10 @@ const nunjucks = require('nunjucks');
 const dotenv = require('dotenv'); 
 const cors = require('cors');
 
+// 해봄
+const models = require('./models/index');
+
+
 dotenv.config(); 
 
 // 라우터 연결
@@ -15,6 +19,20 @@ const usersRouter = require('./routes/users');
 const pwCheckRouter = require('./routes/pwCheck');
 const studentsRouter = require('./routes/students');
 
+//해봄
+// DB 연결 확인 및 table 생성
+models.sequelize.authenticate().then(() => {
+  logger.info('DB connection success');
+
+  // sequelize sync (table 생성)
+  models.sequelize.sync().then(() => {
+    logger.info('Sequelize sync success');
+  }).catch((err) => {
+    logger.error('Sequelize sync error', err);
+  });
+}).catch((err) => {
+  logger.error('DB Connection fail', err);
+});
 
 
 const app = express();

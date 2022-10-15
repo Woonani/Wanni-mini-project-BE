@@ -17,7 +17,7 @@ const ErrorResponse = require('../utils/errorResponse')
 router.post('/:id', verifyToken, async (req, res, next) => {
   const { stuName, stuGrade, school, phoneNum, etc } = req.body;
   try {
-    const exStudentA= await Student.findOne( {where: { phoneNum: req.body.phoneNum } });
+    const exStudentA= await Student.findOne( {where: { stuName: req.body.stuName } });
     if(!exStudentA){
       await Student.create({
         stuName,
@@ -32,22 +32,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
           message: "success"
       })      
     } else {
-      if(exStudentA.stuName !== req.body.stuName){
-        await Student.create({
-          stuName,
-          stuGrade,
-          school,
-          phoneNum,
-          etc,
-          teachId: req.params.id
-        });
-        res.status(201).json({
-            code: 201,
-            message: "success"
-        }) 
-      }else{
       res.status(301).send('이미 등록된 학생입니다.') 
-      }
     }
 
   } catch (error) {
@@ -58,19 +43,21 @@ router.post('/:id', verifyToken, async (req, res, next) => {
 
 router.get('/:id/info/all', verifyToken, async (req, res, next) => {
   
-  // const student = {}
-  
-  // let token
   try {
 
-    req.student = await Student.findAll({
-        attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
-
-        where : {'teachId' : req.params.id}
-      })
-    
-
-    res.status(200).json({ success: true, data: req.student })
+    if(req.decoded.id == req.params.id){
+      console.log('확인해보자',req.params.id)
+      req.student = await Student.findAll({
+          attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
+  
+          where : {teachId : req.params.id}
+        })
+        // console.log(req.params.id)
+  
+      res.status(200).json({ success: true, data: req.student })
+    }else{
+      res.status(401).json({message: '잘못된 접근데쓰네'})
+    }
   } catch (err) {
 
     res.status(400).json({ success: false, message : '선생님에겐 등록된 학생이 없습니다'})
