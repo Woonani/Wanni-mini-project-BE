@@ -141,7 +141,62 @@ router.delete('/:stuId', verifyToken, async (req, res)=>{
     } 
     })
 
+//모든 학생 조회
+router.get('/:id/info/all', verifyToken, async (req, res, next) => {
 
+  // const student = {}
+  // let token
+  try {
+    if(req.decoded.id == req.params.id){
+      console.log('확인해보자',req.params.id)
+      req.student = await Student.findAll({
+          attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
+  
+          where : {teachId : req.params.id}
+        })
+        // console.log(req.params.id)
+  
+      res.status(200).json({ success: true, data: req.student })
+    }else{
+      res.status(401).json({message: '잘못된 접근데쓰네'})
+    }
+    
+ 
+  } catch (err) {
+
+    res.status(400).json({ success: false, message : '선생님에겐 등록된 학생이 없습니다'})
+    // return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+} ) 
+
+//임시기능 : 한명의 학생만 조회 
+// -> 출석부나 시간표에서 학생이름 클릭시 학생 정보 보이게 할 때 사용가능
+router
+  .get('/:userId/info', verifyToken, async (req, res, next) => {
+    try {
+      if(req.decoded.id == req.params.userId){
+        oneStudent = await Student.findOne({
+        where : {teachId : req.params.userId,
+            id : 3 //수정 필요
+        },
+        // attributes:['id','stuName','stuGrade','school','phoneNum','etc']
+      }       
+    )
+    console.log('succ,params',req.params.userId) 
+    console.log('decoded',req.decoded.id) 
+    res.status(200).json({ success: true, data: oneStudent })
+    }else{ 
+      console.log('succ,params',req.params.userId) 
+    console.log('decoded',req.decoded.id)
+      res.status(401).json({message: '잘못된 접근데쓰네'})}
+    }catch (err) {
+      console.log('err, onestudent',oneStudent) //err
+      // console.log('err',req.decoded.userId) 
+      console.log('err',req.params.userId) 
+      res.status(400).json({ success: false, message : '에러' })
+
+    }
+  })
 
 
 
