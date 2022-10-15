@@ -12,7 +12,7 @@ exports.verifyToken = async (req, res, next) => {
     if(isUser){
       return next() 
     }else{
-      res.status(401).json({code: 401,message: '로그인해주세요!',})
+      res.status(401).json({code: 401,message: '잘못된 정보입니다!',})
     }
   } 
   catch(error) {
