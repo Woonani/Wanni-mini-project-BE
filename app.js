@@ -8,6 +8,7 @@ const cors = require('cors');
 
 // 해봄
 const models = require('./models/index');
+const logger = require('./library/logger');
 
 
 dotenv.config(); 
@@ -22,16 +23,16 @@ const studentsRouter = require('./routes/students');
 //해봄
 // DB 연결 확인 및 table 생성
 models.sequelize.authenticate().then(() => {
-  logger.info('DB connection success');
+  logger.info('가 DB connection success');
 
   // sequelize sync (table 생성)
   models.sequelize.sync().then(() => {
-    logger.info('Sequelize sync success');
+    logger.info('나 Sequelize sync success');
   }).catch((err) => {
-    logger.error('Sequelize sync error', err);
+    logger.error('다 Sequelize sync error', err);
   });
 }).catch((err) => {
-  logger.error('DB Connection fail', err);
+  logger.error('라 DB Connection fail', err);
 });
 
 

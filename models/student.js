@@ -10,7 +10,7 @@ module.exports = class Student extends Sequelize.Model {
         unique: true,
       },
       stuGrade: {
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER,//.UNSIGNED,
         allowNull: false,
         unique: false,
       },      
@@ -41,6 +41,7 @@ module.exports = class Student extends Sequelize.Model {
 // 2. 테이블 간 관계설정 (사용법)
   static associate(db) {
     db.Student.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
+    // db.Student.manyToMany(db.User, { foreignKey: 'teachId', targetKey: 'id' });
     db.Student.hasMany(db.Timetable, { foreignKey: 'studentId', sourceKey: 'id' });
     db.Student.hasMany(db.Schedule, { foreignKey: 'studentId', sourceKey: 'id' });
   }

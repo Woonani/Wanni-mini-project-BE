@@ -41,6 +41,8 @@ module.exports = class Schedule extends Sequelize.Model {
   }
 
   static associate(db) {
+    // db.Schedule.belongsToMany(db.User, { foreignKey: 'teachId', targetKey: 'id' });
+    // db.Schedule.belongsToMany(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
     db.Schedule.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
     db.Schedule.belongsTo(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
   

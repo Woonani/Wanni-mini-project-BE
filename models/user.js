@@ -43,7 +43,9 @@ module.exports = class User extends Sequelize.Model {
 
   static associate(db) {
     db.User.hasMany(db.Student, { foreignKey: 'teachId', sourceKey: 'id' });
+    // db.User.manyToMany(db.Student, { foreignKey: 'teachId', sourceKey: 'id' });
     db.User.hasMany(db.Timetable, { foreignKey: 'teachId', sourceKey: 'id' });
     db.User.hasMany(db.Schedule, { foreignKey: 'teachId', sourceKey: 'id' });
+    db.User.hasMany(db.Comment, { foreignKey: 'teachId', sourceKey: 'id' });
   }
 };

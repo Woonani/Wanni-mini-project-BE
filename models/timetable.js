@@ -36,6 +36,8 @@ module.exports = class Timetable extends Sequelize.Model {
   }
 
   static associate(db) {
+    // db.Timetable.belongsToMany(db.User, { foreignKey: 'teachId', targetKey: 'id' });
+    // db.Timetable.belongsToMany(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
     db.Timetable.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
     db.Timetable.belongsTo(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
   
