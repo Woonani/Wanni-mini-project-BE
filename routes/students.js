@@ -58,9 +58,9 @@ router.post('/:id', verifyToken, async (req, res, next) => {
 
 router.get('/:id/info/all', verifyToken, async (req, res, next) => {
   
-  const student = {}
+  // const student = {}
   
-  let token
+  // let token
   try {
 
     req.student = await Student.findAll({
@@ -73,15 +73,43 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
     res.status(200).json({ success: true, data: req.student })
   } catch (err) {
 
-    res.status(400).json({ success: false})
+    res.status(400).json({ success: false, message : '선생님에겐 등록된 학생이 없습니다'})
     // return next(new ErrorResponse('Not authorized to access this route', 401))
   }
 } ) 
+
+//한명의 학생만 조회
+router
+  .get('/:userId/info', verifyToken, async (req, res, next) => {
+    try {
+      oneStudent = await Student.findOne({
+        where : {teachId : req.params.userId,
+            id : 6
+        },
+        // attributes:['id','stuName','stuGrade','school','phoneNum','etc']
+      }       
+    )
+    console.log(req.params.userId)
+ 
+    res.status(200).json({ success: true, data: oneStudent })
+ 
+    }catch (err) {
+      console.log(oneStudent) //err
+      res.status(400).json({ success: false, message : '에러' })
+
+    }
+  })
+  
 
 
   
 // //학생정보 수정 /students/:stuId     // 학생 id로 조회해야 함
 router.patch('/:stuId', verifyToken, async (req, res, next) => {
+  // if(teachId === teachId){
+  //   next()
+  // }else{
+  //   res.status(400).json(message : )
+  // }
   try {
     const { stuName, stuGrade, school, phoneNum, etc } = req.body;
 

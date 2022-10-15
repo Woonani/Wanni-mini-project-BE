@@ -15,6 +15,8 @@ const usersRouter = require('./routes/users');
 const pwCheckRouter = require('./routes/pwCheck');
 const studentsRouter = require('./routes/students');
 
+
+
 const app = express();
 app.set('port', process.env.PORT || 3001);
 app.set('view engine', 'html');
@@ -49,6 +51,7 @@ app.use('/users', usersRouter);
 
 app.use('/pwCheck', pwCheckRouter);
 app.use('/students', studentsRouter);
+
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
