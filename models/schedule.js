@@ -46,5 +46,5 @@ module.exports = class Schedule extends Sequelize.Model {
     db.Schedule.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
     db.Schedule.belongsTo(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
   
-}
+} 
 };
