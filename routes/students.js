@@ -113,6 +113,7 @@ router.patch('/:stuId', verifyToken, async (req, res, next) => {
   try {
     const { stuName, stuGrade, school, phoneNum, etc } = req.body;
 
+
     await Student.update({ 
       stuName, 
       stuGrade, 
@@ -134,6 +135,7 @@ router.patch('/:stuId', verifyToken, async (req, res, next) => {
 
 // //delete  /students/:stuId     // 학생 id로 조회해야 함
 router.delete('/:stuId', verifyToken, async (req, res)=>{
+
     try {
       const deleteStudent = await Student.findOne({where: { id: req.params.stuId}}) // 포스트맨 확인하려고 req.decoded.id 를 req.body.id로 바꿈
       console.log('deleteStudent: '+ deleteStudent);
