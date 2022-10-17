@@ -8,13 +8,13 @@ module.exports = class Timetable extends Sequelize.Model {
         allowNull: false,
         unique: false,
       },
-      lesson: {
-        type: Sequelize.STRING(30),
+      lessonDate: {
+        type: Sequelize.DATE,
         allowNull: false,
-        unique: false,
+        defaultValue: Sequelize.NOW,
       },
-      stuName: {
-        type: Sequelize.STRING(30),
+      stuList: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
         unique: false,
       },
@@ -36,8 +36,10 @@ module.exports = class Timetable extends Sequelize.Model {
   }
 
   static associate(db) {
+    // db.Timetable.belongsToMany(db.User, { foreignKey: 'teachId', targetKey: 'id' });
+    // db.Timetable.belongsToMany(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
     db.Timetable.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
-    db.Timetable.belongsTo(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
+    // db.Timetable.belongsTo(db.Student, { foreignKey: 'studentId', targetKey: 'id' });
   
 }
 };

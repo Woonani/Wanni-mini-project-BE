@@ -11,7 +11,7 @@ module.exports = class Comment extends Sequelize.Model {
       },
       date: {
         type: Sequelize.STRING(20),
-        allowNull: false,
+        allowNull: false,   //NotNull
         unique: false,
         },
     }, {
