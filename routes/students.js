@@ -40,7 +40,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
     return next(error);
   }
   });
-
+//모든 학생 조회
 router.get('/:id/info/all', verifyToken, async (req, res, next) => {
   
   try {
@@ -48,7 +48,7 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
     if(req.decoded.id == req.params.id){
       console.log('확인해보자',req.params.id)
       req.student = await Student.findAll({
-          attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
+          // attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
   
           where : {teachId : req.params.id}
         })
@@ -67,21 +67,28 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
 
 //한명의 학생만 조회
 router
-  .get('/:userId/info', verifyToken, async (req, res, next) => {
+  .get('/:userId/info/:stuId', verifyToken, async (req, res, next) => {
     try {
-      oneStudent = await Student.findOne({
+      if(req.decoded.id == req.params.userId){
+        req.oneStudent = await Student.findOne({
         where : {teachId : req.params.userId,
-            id : 6
+          id : req.params.stuId
         },
         // attributes:['id','stuName','stuGrade','school','phoneNum','etc']
       }       
     )
-    console.log(req.params.userId)
- 
-    res.status(200).json({ success: true, data: oneStudent })
- 
+    console.log('succ,params',req.params.userId) 
+    console.log('succ,params,id',req.params.stuId) 
+    console.log('decoded',req.decoded.id) 
+    res.status(200).json({ success: true, data: req.oneStudent })
+    }else{ 
+      console.log('succ,params',req.params.userId) 
+    console.log('decoded',req.decoded.id)
+      res.status(401).json({message: '잘못된 접근데쓰네'})}
     }catch (err) {
-      console.log(oneStudent) //err
+      console.log('err, onestudent',oneStudent) //err
+      // console.log('err',req.decoded.userId) 
+      console.log('err',req.params.userId) 
       res.status(400).json({ success: false, message : '에러' })
 
     }
@@ -92,11 +99,7 @@ router
   
 // //학생정보 수정 /students/:stuId     // 학생 id로 조회해야 함
 router.patch('/:stuId', verifyToken, async (req, res, next) => {
-  // if(teachId === teachId){
-  //   next()
-  // }else{
-  //   res.status(400).json(message : )
-  // }
+
   try {
     const { stuName, stuGrade, school, phoneNum, etc } = req.body;
 
