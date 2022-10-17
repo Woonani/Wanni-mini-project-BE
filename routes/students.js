@@ -67,19 +67,20 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
 
 //한명의 학생만 조회
 router
-  .get('/:userId/info/stuId', verifyToken, async (req, res, next) => {
+  .get('/:userId/info/:stuId', verifyToken, async (req, res, next) => {
     try {
       if(req.decoded.id == req.params.userId){
-        oneStudent = await Student.findOne({
+        req.oneStudent = await Student.findOne({
         where : {teachId : req.params.userId,
-          stuId : req.params.stuId
+          id : req.params.stuId
         },
         // attributes:['id','stuName','stuGrade','school','phoneNum','etc']
       }       
     )
     console.log('succ,params',req.params.userId) 
+    console.log('succ,params,id',req.params.stuId) 
     console.log('decoded',req.decoded.id) 
-    res.status(200).json({ success: true, data: oneStudent })
+    res.status(200).json({ success: true, data: req.oneStudent })
     }else{ 
       console.log('succ,params',req.params.userId) 
     console.log('decoded',req.decoded.id)
@@ -98,11 +99,7 @@ router
   
 // //학생정보 수정 /students/:stuId     // 학생 id로 조회해야 함
 router.patch('/:stuId', verifyToken, async (req, res, next) => {
-  // if(teachId === teachId){
-  //   next()
-  // }else{
-  //   res.status(400).json(message : )
-  // }
+
   try {
     const { stuName, stuGrade, school, phoneNum, etc } = req.body;
 
