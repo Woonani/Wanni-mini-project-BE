@@ -4,7 +4,8 @@ module.exports = class Schedule extends Sequelize.Model {
   static init(sequelize) {
     return super.init({   
       lessonDate: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
+        //DATE, 시/분/초를 안 받아 오더라도 검색 가능하게 하기 위해 STRING으로 변경 
         allowNull: false,
         defaultValue: Sequelize.NOW,
         },
@@ -15,7 +16,7 @@ module.exports = class Schedule extends Sequelize.Model {
       },
       attendTime: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: false,
       },
       createdAt: {
