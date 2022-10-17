@@ -7,33 +7,45 @@ const { verifyToken } = require('../library/middlewares');
 const { Schedule, Student, User } = require('../models')
 const ErrorResponse = require('../utils/errorResponse')
 
-//스케줄 정보 등록 
+// 스케줄 생성
 router.post('/:id', verifyToken, async (req, res, next) => {
-    const { lessonDate,stuName,attendTime,createdAt,teachId,studentId } = req.body;
+    // const { lessonDate,stuName,attendTime,createdAt,studentId } = req.body;
+    const { lessonDate, stuList } = req.body;
     try {
-    //   const exSchedule= await Schedule.findOne( {where: { stuName: req.body.stuName } });
-      if(!exSchedule){
-        await Schedule.create({
-            lessonDate,
-            stuName,
-            attendTime,
-            createdAt,
-            teachId: req.params.id,
-            studentId
-        });
-        res.status(201).json({
-            message: "success",
-            data : exSchedule,
-        })      
-      } else {
-        res.status(301).json({ success : '등록 성공', data : exSchedule, }) 
-      }
+        let stuListData = stuList.split(",")
+        console.log(stuListData)
+        let ScheduleData = []
+
+        for(i=0; i<stuListData.length; i++){
+
+        console.log(stuListData[i])
+
+        ScheduleData.push(await Schedule.create({
+                lessonDate,
+                stuName :  stuListData[i],
+                attendTime : null,
+                teachId: req.params.id,
+                // studentId
+            })
+        )
+        
+    }
+    return res.status(201).json({
+        message: "success",
+        data : ScheduleData,
+    })      
+    
   
     } catch (error) {
-      console.error('error' , exSchedule, error);
+      console.error('error' , error);
       return next(error);
     }
     });
 
 
+
+
+
+
+    
 module.exports = router;
