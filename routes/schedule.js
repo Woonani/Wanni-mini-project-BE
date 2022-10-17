@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const jwt = require('jsonwebtoken'); //*중요!
-const bcrypt = require('bcrypt');
 const { verifyToken } = require('../library/middlewares');
 const { Schedule, Student } = require('../models')
 // const {  Student, User } = require('../models')
@@ -29,22 +27,23 @@ router.post('/:id', verifyToken, async (req, res, next) => {
         for(i=0; i<stuListData.length; i++){
 
         // console.log(stuListData[i])
-        let j = (await Student.findOne({
+        let j = await Student.findOne({
             attributes : ['id'],
             where : {
                 teachId : req.params.id,
                 stuName : stuListData[i] }
-        }))
-        // console.log("j : ", j)
+            })  
+        // console.log("j야 놔와랏 : ", j,j.datavalues)
 
-        ScheduleData.push(await Schedule.create({
-                lessonDate,
-                stuName :  stuListData[i],
-                attendTime : null,
-                teachId: req.params.id,
-                studentId : j.dataValues.id
-            })
-        )
+            ScheduleData.push(await Schedule.create({
+                    lessonDate,
+                    stuName :  stuListData[i],
+                    attendTime : null,
+                    teachId: req.params.id,
+                    studentId : j.dataValues.id
+                })
+            )
+ 
         
     }
     return res.status(201).json({
@@ -180,23 +179,29 @@ router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
 //delete  schedule/:id/date
 router.delete('/:id/date', verifyToken, async (req, res)=>{
     
-    try {          
-        const deletedResult = await Schedule.destroy(
-            {where: {
-                teachId: req.params.id, 
-                // 날짜 검색 일부만 도 가능
-                lessonDate : {[Op.like]: "%" + deleteDate + "%"} 
-            }
-             });
-        console.log(deletedResult) // 삭제된 로우의 갯수가 나옴
+    try {   
+        if(req.decoded.id == req.params.userId){
 
-        if(deletedResult>0){
-            res.json({
-                code: 200,
-                message: '출석부 삭제 완료',
-            })
-        }else {
-            res.status(400).send(" 삭제할 출석부가 없습니다.")
+            const {deleteDate} = req.body       
+            const deletedResult = await Schedule.destroy(
+                {where: {
+                    teachId: req.params.id, 
+                    // 날짜 검색 일부만 도 가능
+                    lessonDate : {[Op.like]: "%" + deleteDate + "%"} 
+                }
+                });
+            console.log(deletedResult) // 삭제된 로우의 갯수가 나옴
+
+            if(deletedResult>0){
+                res.json({
+                    code: 200,
+                    message: '출석부 삭제 완료',
+                })
+            }else {
+                res.status(400).send(" 삭제할 출석부가 없습니다.")
+            }
+        }else{
+            res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
         }
 
     } catch (error) {
