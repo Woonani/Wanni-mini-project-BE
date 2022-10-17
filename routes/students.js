@@ -171,20 +171,23 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
 
 //임시기능 : 한명의 학생만 조회 
 // -> 출석부나 시간표에서 학생이름 클릭시 학생 정보 보이게 할 때 사용가능
+// 1016 일 수정: 학생의 이름을 req.body에 담아 보내면 그학생의 모든 정보를 res.body에 담아보내줄게!
 router
-  .get('/:userId/info', verifyToken, async (req, res, next) => {
-    try {
+  .get('/:userId/info/stuName', verifyToken, async (req, res, next) => {
+    try {      
       if(req.decoded.id == req.params.userId){
-        oneStudent = await Student.findOne({
+
+        req.oneStudent = await Student.findOne({ //oneStudent를 req.oneStudent로 수정
         where : {teachId : req.params.userId,
-            id : 3 //수정 필요
+          stuName : req.params.stuName //수정 필요// 1016 일 수정
         },
         // attributes:['id','stuName','stuGrade','school','phoneNum','etc']
       }       
+
     )
     console.log('succ,params',req.params.userId) 
     console.log('decoded',req.decoded.id) 
-    res.status(200).json({ success: true, data: oneStudent })
+    res.status(200).json({ success: true, data: req.oneStudent })//oneStudent를 req.oneStudent로 수정
     }else{ 
       console.log('succ,params',req.params.userId) 
     console.log('decoded',req.decoded.id)

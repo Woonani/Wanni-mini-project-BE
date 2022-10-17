@@ -6,27 +6,27 @@ module.exports = class Student extends Sequelize.Model {
     return super.init({
       stuName: {
         type: Sequelize.STRING(20),
-        allowNull: false,
-        unique: true,
+        allowNull: false,  //NotNull
+        unique: true,  // Unique
       },
       stuGrade: {
         type: Sequelize.INTEGER,//.UNSIGNED,
-        allowNull: false,
+        allowNull: false,  //NotNull
         unique: false,
       },      
       school : {
         type: Sequelize.STRING(20),
-        allowNull: false,
+        allowNull: false,  //NotNull
         unique: false,
       },
       phoneNum: { // 부모연락처
         type: Sequelize.STRING(11),
-        allowNull: false,
+        allowNull: false,  //NotNull
         unique: false, // 형제가 다니는 경우 부모 연락처가 동일
       },
       etc: {
         type: Sequelize.STRING(500),
-        allowNull: false,
+        allowNull: true,
       },
     }, {
       sequelize,
@@ -42,7 +42,7 @@ module.exports = class Student extends Sequelize.Model {
   static associate(db) {
     db.Student.belongsTo(db.User, { foreignKey: 'teachId', targetKey: 'id' });
     // db.Student.manyToMany(db.User, { foreignKey: 'teachId', targetKey: 'id' });
-    db.Student.hasMany(db.Timetable, { foreignKey: 'studentId', sourceKey: 'id' });
+    // db.Student.hasMany(db.Timetable, { foreignKey: 'studentId', sourceKey: 'id' });
     db.Student.hasMany(db.Schedule, { foreignKey: 'studentId', sourceKey: 'id' });
   }
 };

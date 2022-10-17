@@ -5,28 +5,28 @@ module.exports = class User extends Sequelize.Model {
     return super.init({
       email: {
         type: Sequelize.STRING(20),
-        allowNull: false,
-        unique: true,
+        allowNull: false, //NotNull
+        unique: true, // Unique
       },
       password: {
         type: Sequelize.STRING(2000),
-        allowNull: false,
+        allowNull: false, //NotNull
         unique: false,
       },
       name: {
         type: Sequelize.STRING(20),
-        allowNull: false,
+        allowNull: false, //NotNull
         unique: false,
       },
       className: {
         type: Sequelize.STRING(30),
-        allowNull: false,
-        unique: false,
+        allowNull: false, //NotNull
+        unique: false, 
       },
       phoneNum: {
         type: Sequelize.STRING(11),
-        allowNull: false,
-        unique: true,
+        allowNull: false, //NotNull
+        unique: true, // Unique
       },
      
     }, {
