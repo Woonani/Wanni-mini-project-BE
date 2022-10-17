@@ -6,6 +6,7 @@ exports.verifyToken = async (req, res, next) => {
     console.log('headers.authorization',req.headers.authorization);
     console.log(req); 
     req.decoded = jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET)
+    console.log("req.decoded.id",req.decoded)
     const isUser = await User.findOne({where: {id: req.decoded.id}})
     // console.log("req.decoded.id",req.decoded.id)
     // console.log("isUser",isUser)
