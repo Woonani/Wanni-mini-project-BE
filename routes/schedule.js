@@ -144,25 +144,28 @@ router.get('/:id/history/:stuName', verifyToken, async (req, res, next) => {
 router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
     try{
         if(req.decoded.id == req.params.userId){
+
             const { attendTime } = req.body;
-            await Schedule.update({
+            const updateResult = await Schedule.update({
                 attendTime
             },
             {where: { //stuId: req.params.stuId,
                 id : req.params.scheId
              }})
-            res.json({
-                code: 200,
-                message: '출석시간 입력 완료 ',
-              });
+            console.log(updateResult)
+              if (updateResult >0){
+                res.json({code: 200, message: '출석시간 입력 완료 ', });
 
+            }else{ 
+                res.status(401).json({message: '입력할 대상이 없습니다.'})
+            }
         }else{
             res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
         }
 
     }catch(error) {
-        console.error(error);
-        next(error);
+        res.status(400).json({ success: false, message : '출석 시간을 등록 할 수 없습니다.'})
+
       }
 })
 
