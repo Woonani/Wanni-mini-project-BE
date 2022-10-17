@@ -101,38 +101,70 @@ router.get('/:id/today', verifyToken, async (req, res, next) => {
 
 
 // Read 2 - 히스토리에 뿌려주기 
+router.get('/:id/history/:stuName', verifyToken, async (req, res, next) => {
 
-//스케줄 정보 등록 
-router.post('/:id', verifyToken, async (req, res, next) => {
-    const { lessonDate,stuName,attendTime,createdAt,teachId,studentId } = req.body;
     try {
-    //   const exSchedule= await Schedule.findOne( {where: { stuName: req.body.stuName } });
-      if(!exSchedule){
-        await Schedule.create({
-            lessonDate,
-            stuName,
-            attendTime,
-            createdAt,
-            teachId: req.params.id,
-            studentId
-        });
-        res.status(201).json({
-            message: "success",
-            data : exSchedule,
-        })      
-      } else {
-        res.status(301).json({ success : '등록 성공', data : exSchedule, }) 
-      }
+        if(req.decoded.id == req.params.id){ 
+            
+            // const { lessonDate } = req.body; 
+            // console.log(lessonDate)
+
+            const historySchedule = await Schedule.findAll({
+                where : {
+                    teachId : req.params.id, 
+                    stuName :  req.params.stuName
+                    // lessonDate : {[Op.like]: "%" + lessonDate + "%"}   
+                }
+                })
+            if (historySchedule){
+                res.status(200).json({ success: true, data: historySchedule })
+
+            }else{ 
+
+                res.status(401).json({message: '조회할 히스토리가 없습니다.'})
+            }
+    
+        }else{
+            res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
+        }
+      
+   
+    } catch (err) {
   
-    } catch (error) {
-      console.error('error' , exSchedule, error);
-      return next(error);
+      res.status(400).json({ success: false, message : '출석부(history)를 불러올 수 없습니다.'})
+
     }
-    });
+  } ) 
 
 
 
-// U
+
+
+// U attendence 추가하기
+router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
+    try{
+        if(req.decoded.id == req.params.userId){
+            const { attendTime } = req.body;
+            await Schedule.update({
+                attendTime
+            },
+            {where: { //stuId: req.params.stuId,
+                id : req.params.scheId
+             }})
+            res.json({
+                code: 200,
+                message: '출석시간 입력 완료 ',
+              });
+
+        }else{
+            res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
+        }
+
+    }catch(error) {
+        console.error(error);
+        next(error);
+      }
+})
 
 
 
