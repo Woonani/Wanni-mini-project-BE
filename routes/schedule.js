@@ -11,26 +11,26 @@ const ErrorResponse = require('../utils/errorResponse')
 router.post('/:id', verifyToken, async (req, res, next) => {
     const { lessonDate,stuName,attendTime,createdAt,teachId,studentId } = req.body;
     try {
-      const exStudentA= await Student.findOne( {where: { stuName: req.body.stuName } });
-      if(!exStudentA){
-        await Student.create({
-          stuName,
-          stuGrade,
-          school,
-          phoneNum,
-          etc,
-          teachId: req.params.id
+    //   const exSchedule= await Schedule.findOne( {where: { stuName: req.body.stuName } });
+      if(!exSchedule){
+        await Schedule.create({
+            lessonDate,
+            stuName,
+            attendTime,
+            createdAt,
+            teachId: req.params.id,
+            studentId
         });
         res.status(201).json({
-            code: 201,
-            message: "success"
+            message: "success",
+            data : exSchedule,
         })      
       } else {
-        res.status(301).send('이미 등록된 학생입니다.') 
+        res.status(301).json({ success : '등록 성공', data : exSchedule, }) 
       }
   
     } catch (error) {
-      console.error(error);
+      console.error('error' , exSchedule, error);
       return next(error);
     }
     });

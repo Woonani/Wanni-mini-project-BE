@@ -48,7 +48,7 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
     if(req.decoded.id == req.params.id){
       console.log('확인해보자',req.params.id)
       req.student = await Student.findAll({
-          attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
+          // attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
   
           where : {teachId : req.params.id}
         })
