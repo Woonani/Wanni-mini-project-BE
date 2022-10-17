@@ -171,6 +171,8 @@ router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
 
 
 // D
+// Delete - 3.쌤 한분의 특정 날짜의 출석부 삭제 : userId, lessonDate로 삭제
+//delete  schedule/:id/date
 
 
 
