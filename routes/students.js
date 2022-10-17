@@ -17,7 +17,7 @@ const ErrorResponse = require('../utils/errorResponse')
 router.post('/:id', verifyToken, async (req, res, next) => {
   const { stuName, stuGrade, school, phoneNum, etc } = req.body;
   try {
-    const exStudentA= await Student.findOne( {where: { phoneNum: req.body.phoneNum } });
+    const exStudentA= await Student.findOne( {where: { stuName: req.body.stuName } });
     if(!exStudentA){
       await Student.create({
         stuName,
@@ -32,22 +32,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
           message: "success"
       })      
     } else {
-      if(exStudentA.stuName !== req.body.stuName){
-        await Student.create({
-          stuName,
-          stuGrade,
-          school,
-          phoneNum,
-          etc,
-          teachId: req.params.id
-        });
-        res.status(201).json({
-            code: 201,
-            message: "success"
-        }) 
-      }else{
       res.status(301).send('이미 등록된 학생입니다.') 
-      }
     }
 
   } catch (error) {
@@ -57,10 +42,9 @@ router.post('/:id', verifyToken, async (req, res, next) => {
   });
 //모든 학생 조회
 router.get('/:id/info/all', verifyToken, async (req, res, next) => {
-
-  // const student = {}
-  // let token
+  
   try {
+
     if(req.decoded.id == req.params.id){
       console.log('확인해보자',req.params.id)
       req.student = await Student.findAll({
@@ -74,8 +58,6 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
     }else{
       res.status(401).json({message: '잘못된 접근데쓰네'})
     }
-    
- 
   } catch (err) {
 
     res.status(400).json({ success: false, message : '선생님에겐 등록된 학생이 없습니다'})
@@ -85,12 +67,12 @@ router.get('/:id/info/all', verifyToken, async (req, res, next) => {
 
 //한명의 학생만 조회
 router
-  .get('/:userId/info', verifyToken, async (req, res, next) => {
+  .get('/:userId/info/stuId', verifyToken, async (req, res, next) => {
     try {
       if(req.decoded.id == req.params.userId){
         oneStudent = await Student.findOne({
         where : {teachId : req.params.userId,
-            id : 3 //수정 필요
+          stuId : req.params.stuId
         },
         // attributes:['id','stuName','stuGrade','school','phoneNum','etc']
       }       
@@ -165,7 +147,65 @@ router.delete('/:stuId', verifyToken, async (req, res)=>{
     } 
     })
 
+//모든 학생 조회
+router.get('/:id/info/all', verifyToken, async (req, res, next) => {
 
+  // const student = {}
+  // let token
+  try {
+    if(req.decoded.id == req.params.id){
+      console.log('확인해보자',req.params.id)
+      req.student = await Student.findAll({
+          attributes : ['id','stuName','stuGrade','school','phoneNum','etc'],
+  
+          where : {teachId : req.params.id}
+        })
+        // console.log(req.params.id)
+  
+      res.status(200).json({ success: true, data: req.student })
+    }else{
+      res.status(401).json({message: '잘못된 접근데쓰네'})
+    }
+    
+ 
+  } catch (err) {
+
+    res.status(400).json({ success: false, message : '선생님에겐 등록된 학생이 없습니다'})
+    // return next(new ErrorResponse('Not authorized to access this route', 401))
+  }
+} ) 
+
+//임시기능 : 한명의 학생만 조회 
+// -> 출석부나 시간표에서 학생이름 클릭시 학생 정보 보이게 할 때 사용가능
+// 1016 일 수정: 학생의 이름을 req.body에 담아 보내면 그학생의 모든 정보를 res.body에 담아보내줄게!
+router
+  .get('/:userId/info/stuName', verifyToken, async (req, res, next) => {
+    try {      
+      if(req.decoded.id == req.params.userId){
+
+        req.oneStudent = await Student.findOne({ //oneStudent를 req.oneStudent로 수정
+        where : {teachId : req.params.userId,
+          stuName : req.params.stuName //수정 필요// 1016 일 수정
+        },
+        // attributes:['id','stuName','stuGrade','school','phoneNum','etc']
+      }       
+
+    )
+    console.log('succ,params',req.params.userId) 
+    console.log('decoded',req.decoded.id) 
+    res.status(200).json({ success: true, data: req.oneStudent })//oneStudent를 req.oneStudent로 수정
+    }else{ 
+      console.log('succ,params',req.params.userId) 
+    console.log('decoded',req.decoded.id)
+      res.status(401).json({message: '잘못된 접근데쓰네'})}
+    }catch (err) {
+      console.log('err, onestudent',oneStudent) //err
+      // console.log('err',req.decoded.userId) 
+      console.log('err',req.params.userId) 
+      res.status(400).json({ success: false, message : '에러' })
+
+    }
+  })
 
 
 
