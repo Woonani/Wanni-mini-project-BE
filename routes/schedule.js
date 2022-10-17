@@ -74,6 +74,7 @@ router.get('/:id/today', verifyToken, async (req, res, next) => {
             const todaySchedule = await Schedule.findAll({
                 where : {
                     teachId : req.params.id, 
+                    // 날짜 검색 일부만 도 가능
                     lessonDate : {[Op.like]: "%" + lessonDate + "%"}   
                 }
                 })
