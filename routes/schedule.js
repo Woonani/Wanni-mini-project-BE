@@ -29,7 +29,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
         // console.log(stuListData[i])
         let j = await Student.findOne({
             attributes : ['id'],
-            where : {
+            where : { 
                 teachId : req.params.id,
                 stuName : stuListData[i] }
             })  
