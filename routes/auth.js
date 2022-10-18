@@ -9,9 +9,12 @@ const ErrorResponse = require('../utils/errorResponse')
 const router = express.Router();
 
 //join  /auth/join
-router.post('/join', async (req, res, next) => {
+router.post('/join', verifyToken, async (req, res, next) => {
+
+  // if(!verifyToken == undefined){
     const { email, name , password, className, phoneNum   } = req.body;
     try {
+        // console.log('very1',verifyToken)
       const exUser = await User.findOne({ where: { email } });
       if (exUser) {
         res.status(403).send('이미 존재하는 email 입니다.');
@@ -24,15 +27,17 @@ router.post('/join', async (req, res, next) => {
             className,
             phoneNum
           });
-          res.status(201).json({
-              code: 201,
-              message: "success"
-          })
+          res.status(201).json({ code: 201, message: "success"})
       }
+      
     } catch (error) {
       console.error(error);
       return next(error);
     }
+  // }else{
+  //   console.log('very',verifyToken)
+  //   res.status(400).json({message: "you don't need to make it" })
+  // }
   });
 
   //login    /auth/login
