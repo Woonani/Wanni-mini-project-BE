@@ -16,51 +16,6 @@ const Op = sequelize.Op;
 //     "lessonDate" : "2022/10/17/14:00:00",
 //     "stuList" : "학생1,학생2,학생3"
 // }
-router.post('/:id', verifyToken, async (req, res, next) => {
-    // const { lessonDate,stuName,attendTime,createdAt,studentId } = req.body;
-    // const { daySchedule,lessonDate, stuList } = req.body;
-    const { daySchedule } = req.body;
-    try {
-        for(let i = 0 ; i<daySchedule.length ; i++){
-            let lessonDate = daySchedule[i].lessonDate
-            let stuList = daySchedule[i].stuList
-        }
-        let stuListData = stuList.split(",")
-        console.log('stuListData',stuListData)
-        let ScheduleData = []
-
-        for(i=0; i<stuListData.length; i++){
-
-        // console.log(stuListData[i])
-        let j = (await Student.findOne({
-            attributes : ['id'],
-            where : { 
-                teachId : req.params.id,
-                stuName : stuListData[i] }
-        }))
-        // console.log("j : ", j)
-
-        ScheduleData.push(await Schedule.create({
-                lessonDate,
-                stuName :  stuListData[i],
-                attendTime : null,
-                teachId: req.params.id,
-                studentId : j.dataValues.id
-            })
-        )
-        
-    }
-    return res.status(201).json({
-        message: "success",
-        data : ScheduleData,
-    })      
-    
-  
-    } catch (error) {
-      console.error('error' , error);
-      return next(error);
-    }
-    });
 
 
 
