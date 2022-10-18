@@ -16,8 +16,8 @@ const Op = sequelize.Op;
 //     "lessonDate" : "2022/10/17/14:00:00",
 //     "stuList" : "학생1,학생2,학생3"
 // } req 요청 횟수가 많을수록 느려진다!!
-// daySchedule : [{ "lessonDate" : "2022/10/17 14:00", "stuList" : "a,b,c"},
-//                { "lessonDate" : "2022/10/17 15:00", "stuList" : "a,b,c"}]
+// daySchedule : [{ "lessonDate" : "2022/10/1714:00", "stuList" : "a,b,c"},
+//                { "lessonDate" : "2022/10/17/15:00", "stuList" : "a,b,c"}]
 router.post('/:id', verifyToken, async (req, res, next) => {
     // const { lessonDate,stuName,attendTime,createdAt,studentId } = req.body;
     // const { daySchedule,lessonDate, stuList } = req.body;
@@ -28,37 +28,40 @@ router.post('/:id', verifyToken, async (req, res, next) => {
         for(let i = 0 ; i<daySchedule.length ; i++){
             let lessonDate = daySchedule[i].lessonDate//"2022/10/17 14:00"
             let stuList = daySchedule[i].stuList//"a,b,c"
-        
+
+            
             let stuListData = stuList.split(",")
             console.log('stuListData',stuListData) //[a,b,c]
-
-            let ScheduleData = []
-
-
-            for(k=0; k<stuListData.length; k++){
-
-                // console.log(stuListData[k])
-                let j = (await Student.findOne({
-                    attributes : ['id'],
-                    where : { 
-                        teachId : req.params.id,
-                        stuName : stuListData[k] }
-                }))
-                console.log("j : ", j)
-                // 아래 ScheduleData는 res확인 용
-                ScheduleData.push(
-                    await Schedule.create({
-                        lessonDate,
-                        stuName :  stuListData[k],
-                        attendTime : null,
-                        teachId: req.params.id,
-                        studentId : j.dataValues.id
-                    })  
-                )
-                
-            }
             
-            ScheduleData2.push(ScheduleData)
+            let ScheduleData = []
+            
+            // if(stuListData[0] != ''){ // 프론트에서 처리완료
+
+                for(k=0; k<stuListData.length; k++){
+
+                    // console.log(stuListData[k])
+                    let j = (await Student.findOne({
+                        attributes : ['id'],
+                        where : { 
+                            teachId : req.params.id,
+                            stuName : stuListData[k] }
+                    }))
+                    console.log("j : ", j)
+                    // 아래 ScheduleData는 res확인 용
+                    ScheduleData.push(
+                        await Schedule.create({
+                            lessonDate,
+                            stuName :  stuListData[k],
+                            attendTime : null,
+                            teachId: req.params.id,
+                            studentId : j.dataValues.id
+                        })  
+                    )
+                    
+                }
+            
+                ScheduleData2.push(ScheduleData)
+        // }
 
         }
     return res.status(201).json({
@@ -74,10 +77,13 @@ router.post('/:id', verifyToken, async (req, res, next) => {
     });
 
 
+
+
+    
 // Read 1 - 출석부에 뿌려주기 
 // GET schedule/:id/today
-router.get('/:id/today', verifyToken, async (req, res, next) => {
-
+router.post('/:id/today', verifyToken, async (req, res, next) => {
+// 
     try {
         if(req.decoded.id == req.params.id){ 
             
@@ -114,6 +120,7 @@ router.get('/:id/today', verifyToken, async (req, res, next) => {
 
 
 // Read 2 - 히스토리에 뿌려주기 
+// GET schedule//:id/history/:stuName
 router.get('/:id/history/:stuName', verifyToken, async (req, res, next) => {
 
     try {
@@ -149,7 +156,36 @@ router.get('/:id/history/:stuName', verifyToken, async (req, res, next) => {
     }
   } ) 
 
+// Read 3 - 전체 schedule 가져오기 
+// GET schedule/:id/all
+router.get('/:id/all', verifyToken, async (req, res, next) => {
 
+    try {
+        if(req.decoded.id == req.params.id){ 
+
+            const allSchedule = await Schedule.findAll({
+                where : {
+                    teachId : req.params.id,    
+                }
+            })
+            if (allSchedule){
+                res.status(200).json({ success: true, data: allSchedule })
+
+            }else{ 
+                res.status(401).json({message: '조회할 출석부가 없습니다.'})
+            }
+    
+        }else{
+            res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
+        }
+      
+   
+    } catch (err) {
+  
+      res.status(400).json({ success: false, message : '출석부(schedule)를 불러올 수 없습니다.'})
+
+    }
+  } ) 
 
 
 
@@ -197,7 +233,7 @@ router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
 router.delete('/:id/date', verifyToken, async (req, res)=>{
     
     try {   
-        if(req.decoded.id == req.params.userId){
+        if(req.decoded.id == req.params.id){
 
             const {deleteDate} = req.body       
             const deletedResult = await Schedule.destroy(
@@ -225,6 +261,7 @@ router.delete('/:id/date', verifyToken, async (req, res)=>{
       console.error(error);
     } 
     })
+
 
 
 
