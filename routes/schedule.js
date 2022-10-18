@@ -18,10 +18,11 @@ const Op = sequelize.Op;
 // }
 router.post('/:id', verifyToken, async (req, res, next) => {
     // const { lessonDate,stuName,attendTime,createdAt,studentId } = req.body;
-    const { lessonDate, stuList } = req.body;
+    const { daySchedule,lessonDate, stuList } = req.body;
     try {
+
         let stuListData = stuList.split(",")
-        console.log(stuListData)
+        console.log('stuListData',stuListData)
         let ScheduleData = []
 
         for(i=0; i<stuListData.length; i++){
