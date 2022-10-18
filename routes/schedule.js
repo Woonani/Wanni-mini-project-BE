@@ -15,8 +15,63 @@ const Op = sequelize.Op;
 // req.body => {
 //     "lessonDate" : "2022/10/17/14:00:00",
 //     "stuList" : "학생1,학생2,학생3"
-// }
+// } req 요청 횟수가 많을수록 느려진다!!
+// daySchedule : [{ "lessonDate" : "2022/10/17 14:00", "stuList" : "a,b,c"},
+//                { "lessonDate" : "2022/10/17 15:00", "stuList" : "a,b,c"}]
+router.post('/:id', verifyToken, async (req, res, next) => {
+    // const { lessonDate,stuName,attendTime,createdAt,studentId } = req.body;
+    // const { daySchedule,lessonDate, stuList } = req.body;
+    const { daySchedule } = req.body;
+    try {
+        let ScheduleData2 = []
+        // i 번째 
+        for(let i = 0 ; i<daySchedule.length ; i++){
+            let lessonDate = daySchedule[i].lessonDate//"2022/10/17 14:00"
+            let stuList = daySchedule[i].stuList//"a,b,c"
+        
+            let stuListData = stuList.split(",")
+            console.log('stuListData',stuListData) //[a,b,c]
 
+            let ScheduleData = []
+
+
+            for(k=0; k<stuListData.length; k++){
+
+                // console.log(stuListData[k])
+                let j = (await Student.findOne({
+                    attributes : ['id'],
+                    where : { 
+                        teachId : req.params.id,
+                        stuName : stuListData[k] }
+                }))
+                console.log("j : ", j)
+                // 아래 ScheduleData는 res확인 용
+                ScheduleData.push(
+                    await Schedule.create({
+                        lessonDate,
+                        stuName :  stuListData[k],
+                        attendTime : null,
+                        teachId: req.params.id,
+                        studentId : j.dataValues.id
+                    })  
+                )
+                
+            }
+            
+            ScheduleData2.push(ScheduleData)
+
+        }
+    return res.status(201).json({
+        message: "success",
+        data : ScheduleData2,
+    })      
+    
+  
+    } catch (error) {
+      console.error('error' , error);
+      return next(error);
+    }
+    });
 
 
 // Read 1 - 출석부에 뿌려주기 
@@ -77,7 +132,7 @@ router.get('/:id/history/:stuName', verifyToken, async (req, res, next) => {
             if (historySchedule){
                 res.status(200).json({ success: true, data: historySchedule })
 
-            }else{ 
+            }else{  
 
                 res.status(401).json({message: '조회할 히스토리가 없습니다.'})
             }
