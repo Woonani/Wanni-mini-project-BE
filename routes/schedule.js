@@ -52,7 +52,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
                         await Schedule.create({
                             lessonDate,
                             stuName :  stuListData[k],
-                            attendTime : null,
+                            attendTime : "출석전", 
                             teachId: req.params.id,
                             studentId : j.dataValues.id
                         })  
@@ -90,7 +90,7 @@ router.post('/:id/today', verifyToken, async (req, res, next) => {
             const { lessonDate } = req.body; 
             console.log(lessonDate)
 
-            const todaySchedule = await Schedule.findAll({
+            todaySchedule = await Schedule.findAll({
                 where : {
                     teachId : req.params.id, 
                     // 날짜 검색 일부만 도 가능
@@ -218,8 +218,62 @@ router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
       }
 })
 
-
-
+// 등원 문자 보내기 api
+router.post('/:id/sms/:scheId', async (req, res, next) => {
+    // router.post('/:id/sms/:scheId', verifyToken, async (req, re, next) => {
+        try{
+            // if(req.decoded.id == req.params.id){
+                const { attendTime } = req.body;
+    
+                // 선생님 학원이름
+                const smsData1 = await User.findOne({
+                    attributes:['className'],
+                    where: { id : req.params.id}
+                })
+                console.log('짜잔~! smsData1 : ', smsData1.dataValues.className)
+    
+                // 출석한 학생의 이름과, 학부모 전화번호, 출석시간 가져오기
+                const smsData2 = await Student.findOne({
+                    attributes:['stuName','phoneNum'],
+                    include: [
+                        {   model: Schedule,
+                            where: { id : req.params.scheId}, 
+                            attributes: ['attendTime'] }
+                    ],
+                })
+                console.log(smsData2)
+                if(!smsData2){
+                    res.status(400).json({ success: false, message : '데이터 없음'})
+                }
+                console.log('짜잔~! smsData2 : ', smsData2.dataValues.stuName, smsData2.dataValues.phoneNum)
+                
+                const userClassName = smsData1.dataValues.className; // 학원이름 User Table
+                const parentsPhoneNum = smsData2.dataValues.phoneNum; // SMS를 수신할 전화번호 Student Table
+                const studentName = smsData2.dataValues.stuName; // 학생이름 Student Table
+                const stuAttendance = attendTime; // 학생출석시간 Student Table
+                
+                
+                // try {
+                    await smsUtil.sendAttendanceSMS(userClassName, studentName, stuAttendance, parentsPhoneNum)
+                    res.send("등원문자 전송완료!")
+    
+                // }catch(err){
+                //     console.log(err)
+                // }
+                // res.json({code: 200, message: '출석시간 입력 완료 ', });
+                
+                
+            // }else{
+            //     res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
+            // }
+    
+        }
+        catch(error) {
+            console.log(error)
+            res.status(400).json({ success: false, message : '문자전송 실패'})
+    
+          }
+    })
 
 
 // Delete - 1.쌤 한분의 전체 출석부 삭제 : userId로 삭제

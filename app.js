@@ -20,6 +20,7 @@ const usersRouter = require('./routes/users');
 const pwCheckRouter = require('./routes/pwCheck');
 const studentsRouter = require('./routes/students');
 const scheduleRouter = require('./routes/schedule');
+const commentRouter = require('./routes/comment');
 
 //해봄
 // DB 연결 확인 및 table 생성
@@ -72,6 +73,7 @@ app.use('/users', usersRouter);
 app.use('/pwCheck', pwCheckRouter);
 app.use('/students', studentsRouter);
 app.use('/schedule', scheduleRouter);
+app.use('/comment', commentRouter);
 
 
 app.use((req, res, next) => {
