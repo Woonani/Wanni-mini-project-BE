@@ -15,10 +15,6 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
 
 
 
-<<<<<<< HEAD
-module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneNum) => {
-=======
->>>>>>> 04afb518ce08c30a0f37b486a197972d906b4de0
     try {
     // // 학부모전화번호, 공부방이름, 학생이름, 등원시간
     // 등원시간 저장할 row를 Schedule 테이블에서 찾잖아?
@@ -93,13 +89,8 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
         
         // console.log("response", data);
 
-<<<<<<< HEAD
-        //   console.log("response", smsRes.data);
-        //   return res.status(200).json({ message: "SMS sent" });
-=======
         //  console.log("response", smsRes.data);
         //  return res.status(200).json({ message: "SMS sent" });
->>>>>>> 04afb518ce08c30a0f37b486a197972d906b4de0
     } catch(err){
       console.log(err);
     //   return res.status(404).json({ message: "SMS not sent" });
@@ -108,10 +99,7 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
 
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 04afb518ce08c30a0f37b486a197972d906b4de0
 // {
 //     sendAttendanceSMS: async (req, res) => { 
 //     // 환경 변수
