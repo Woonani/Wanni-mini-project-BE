@@ -196,7 +196,7 @@ router.get('/:id/all', verifyToken, async (req, res, next) => {
 router.patch('/:id/today/:scheId', verifyToken, async (req, res, next) => {
     try{
         if(req.decoded.id == req.params.id){
-            const { attendTime } = req.body;ㅣ
+            const { attendTime } = req.body;
             
             // 출석 시간 DB에 입력
             const updateResult = await Schedule.update({
@@ -206,10 +206,43 @@ router.patch('/:id/today/:scheId', verifyToken, async (req, res, next) => {
                 id : req.params.scheId
             }}
             )
-            console.log('updateResult : ', updateResult)//[1]
+            console.log('가나다updateResult : ', updateResult)//[1]
             
             if (updateResult > 0){
-                res.json({code: 200, message: '출석시간 입력 완료 ', });
+                ///////////////////////////
+                const smsData1 = await User.findOne({
+                    attributes:['className'],
+                    where: { id : req.params.id}
+                })
+                console.log('짜잔~! smsData1 : ', smsData1.dataValues.className)
+    
+                // 출석한 학생의 이름과, 학부모 전화번호, 출석시간 가져오기
+                const smsData2 = await Student.findOne({
+                    attributes:['stuName','phoneNum'],
+                    include: [
+                        {   model: Schedule,
+                            where: { id : req.params.scheId}, 
+                            attributes: ['attendTime'] }
+                    ],
+                })
+                // console.log(smsData2)
+                if(!smsData2){
+                    res.status(400).json({ success: false, message : '데이터 없음'})
+                }
+                console.log('짜잔~! smsData2 : ', smsData2.dataValues.stuName, smsData2.dataValues.phoneNum)
+                
+                const userClassName = smsData1.dataValues.className; // 학원이름 User Table
+                const parentsPhoneNum = smsData2.dataValues.phoneNum; // SMS를 수신할 전화번호 Student Table
+                const studentName = smsData2.dataValues.stuName; // 학생이름 Student Table
+                const stuAttendance = attendTime; // 학생출석시간 Student Table
+                
+                
+                // try {
+                    await smsUtil.sendAttendanceSMS(userClassName, studentName, stuAttendance, parentsPhoneNum)
+                    // res.send("등원문자 전송완료!")
+                
+                ///////////////////////////
+                res.json({code: 200, message: '출석시간 입력 완료 & 등원문자 전송완료! ' });
             
             }else{ 
                 res.status(401).json({message: '입력할 대상이 없습니다.'})
