@@ -55,7 +55,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
                         await Schedule.create({
                             lessonDate,
                             stuName :  stuListData[k],
-                            attendTime : null,
+                            attendTime : "출석전", 
                             teachId: req.params.id,
                             studentId : j.dataValues.id
                         })  
@@ -93,7 +93,7 @@ router.post('/:id/today', verifyToken, async (req, res, next) => {
             const { lessonDate } = req.body; 
             console.log(lessonDate)
 
-            const todaySchedule = await Schedule.findAll({
+            todaySchedule = await Schedule.findAll({
                 where : {
                     teachId : req.params.id, 
                     // 날짜 검색 일부만 도 가능

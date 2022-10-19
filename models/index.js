@@ -9,7 +9,7 @@ const { sequelize } = require('./connection');
 // 1-1. 앱 환경 설정
 const env = process.env.NODE_ENV || 'development';
 // 1-2. 환경별로 설정(개발환경 따로 배포환경 따로 옵션 설정)
-const config = require('../config/config')[env];
+const config = require('../config/config.json')[env];
 
 // 빈 객체 생성
 const db = {};
