@@ -17,6 +17,8 @@ const ErrorResponse = require('../utils/errorResponse')
 router.post('/:id', verifyToken, async (req, res, next) => {
   const { stuName, stuGrade, school, phoneNum, etc } = req.body;
   try {
+    if(req.decoded.id == req.params.id){
+      console.log('확인해보자',req.params.id)
     const exStudentA= await Student.findOne( {where: { stuName: req.body.stuName } });
     if(!exStudentA){
       await Student.create({
@@ -34,7 +36,9 @@ router.post('/:id', verifyToken, async (req, res, next) => {
     } else {
       res.status(301).send('이미 등록된 학생입니다.') 
     }
-
+  }else{
+    res.status(401).json({message: '잘못된 접근데쓰네'})
+  }
   } catch (error) {
     console.error(error);
     return next(error);

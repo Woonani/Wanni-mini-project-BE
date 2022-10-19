@@ -9,9 +9,9 @@ const ErrorResponse = require('../utils/errorResponse')
 const router = express.Router();
 
 //join  /auth/join
-router.post('/join', verifyToken, async (req, res, next) => {
+router.post('/join', async (req, res, next) => { //verifyToken, 회원가입할때 는 토큰이 존재하지 않아 가입할 수 없는 버그가 생깁니다.
 
-  // if(!verifyToken == undefined){
+
     const { email, name , password, className, phoneNum   } = req.body;
     try {
         // console.log('very1',verifyToken)
