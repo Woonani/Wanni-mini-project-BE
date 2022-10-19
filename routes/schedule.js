@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const { verifyToken } = require('../library/middlewares');
-const { Schedule, Student } = require('../models')
-// const {  Student, User } = require('../models')
+const { Schedule, Student, User } = require('../models')
 // const ErrorResponse = require('../utils/errorResponse')
 const sequelize = require("sequelize")
 const Op = sequelize.Op;
+// 문자전송모듈 임포트
+// import {sendAttendanceSMS } from '../library/util.js'
+const smsUtil = require('../library/util.js')
+
 
 
 
@@ -190,21 +193,24 @@ router.get('/:id/all', verifyToken, async (req, res, next) => {
 
 
 // U attendence 추가하기
-router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
+router.patch('/:id/today/:scheId', verifyToken, async (req, res, next) => {
     try{
-        if(req.decoded.id == req.params.userId){
-
-            const { attendTime } = req.body;
+        if(req.decoded.id == req.params.id){
+            const { attendTime } = req.body;ㅣ
+            
+            // 출석 시간 DB에 입력
             const updateResult = await Schedule.update({
                 attendTime
             },
             {where: { //stuId: req.params.stuId,
                 id : req.params.scheId
-             }})
-            console.log(updateResult)
-              if (updateResult > 0){
+            }}
+            )
+            console.log('updateResult : ', updateResult)//[1]
+            
+            if (updateResult > 0){
                 res.json({code: 200, message: '출석시간 입력 완료 ', });
-
+            
             }else{ 
                 res.status(401).json({message: '입력할 대상이 없습니다.'})
             }
@@ -212,68 +218,76 @@ router.patch('/:userId/today/:scheId', verifyToken, async (req, res, next) => {
             res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
         }
 
-    }catch(error) {
+    }
+    catch(error) {
         res.status(400).json({ success: false, message : '출석 시간을 등록 할 수 없습니다.'})
 
       }
 })
 
+
+
 // 등원 문자 보내기 api
 router.post('/:id/sms/:scheId', async (req, res, next) => {
-    // router.post('/:id/sms/:scheId', verifyToken, async (req, re, next) => {
-        try{
-            // if(req.decoded.id == req.params.id){
-                const { attendTime } = req.body;
-    
-                // 선생님 학원이름
-                const smsData1 = await User.findOne({
-                    attributes:['className'],
-                    where: { id : req.params.id}
-                })
-                console.log('짜잔~! smsData1 : ', smsData1.dataValues.className)
-    
-                // 출석한 학생의 이름과, 학부모 전화번호, 출석시간 가져오기
-                const smsData2 = await Student.findOne({
-                    attributes:['stuName','phoneNum'],
-                    include: [
-                        {   model: Schedule,
-                            where: { id : req.params.scheId}, 
-                            attributes: ['attendTime'] }
-                    ],
-                })
-                console.log(smsData2)
-                if(!smsData2){
-                    res.status(400).json({ success: false, message : '데이터 없음'})
-                }
-                console.log('짜잔~! smsData2 : ', smsData2.dataValues.stuName, smsData2.dataValues.phoneNum)
-                
-                const userClassName = smsData1.dataValues.className; // 학원이름 User Table
-                const parentsPhoneNum = smsData2.dataValues.phoneNum; // SMS를 수신할 전화번호 Student Table
-                const studentName = smsData2.dataValues.stuName; // 학생이름 Student Table
-                const stuAttendance = attendTime; // 학생출석시간 Student Table
-                
-                
-                // try {
-                    await smsUtil.sendAttendanceSMS(userClassName, studentName, stuAttendance, parentsPhoneNum)
-                    res.send("등원문자 전송완료!")
-    
-                // }catch(err){
-                //     console.log(err)
-                // }
-                // res.json({code: 200, message: '출석시간 입력 완료 ', });
-                
-                
-            // }else{
-            //     res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
+// router.post('/:id/sms/:scheId', verifyToken, async (req, re, next) => {
+    try{
+        // if(req.decoded.id == req.params.id){
+            const { attendTime } = req.body;
+
+            // 선생님 학원이름
+            const smsData1 = await User.findOne({
+                attributes:['className'],
+                where: { id : req.params.id}
+            })
+            console.log('짜잔~! smsData1 : ', smsData1.dataValues.className)
+
+            // 출석한 학생의 이름과, 학부모 전화번호, 출석시간 가져오기
+            const smsData2 = await Student.findOne({
+                attributes:['stuName','phoneNum'],
+                include: [
+                    {   model: Schedule,
+                        where: { id : req.params.scheId}, 
+                        attributes: ['attendTime'] }
+                ],
+            })
+            console.log(smsData2)
+            if(!smsData2){
+                res.status(400).json({ success: false, message : '데이터 없음'})
+            }
+            console.log('짜잔~! smsData2 : ', smsData2.dataValues.stuName, smsData2.dataValues.phoneNum)
+            
+            const userClassName = smsData1.dataValues.className; // 학원이름 User Table
+            const parentsPhoneNum = smsData2.dataValues.phoneNum; // SMS를 수신할 전화번호 Student Table
+            const studentName = smsData2.dataValues.stuName; // 학생이름 Student Table
+            const stuAttendance = attendTime; // 학생출석시간 Student Table
+            
+            
+            // try {
+                await smsUtil.sendAttendanceSMS(userClassName, studentName, stuAttendance, parentsPhoneNum)
+                res.send("등원문자 전송완료!")
+
+            // }catch(err){
+            //     console.log(err)
             // }
-    
-        }
-        catch(error) {
-            console.log(error)
-            res.status(400).json({ success: false, message : '문자전송 실패'})
-    
-          }
-    })
+            // res.json({code: 200, message: '출석시간 입력 완료 ', });
+            
+            
+        // }else{
+        //     res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
+        // }
+
+    }
+    catch(error) {
+        console.log(error)
+        res.status(400).json({ success: false, message : '문자전송 실패'})
+
+      }
+})
+
+
+
+
+
 
 
 // Delete - 1.쌤 한분의 전체 출석부 삭제 : userId로 삭제

@@ -1,4 +1,18 @@
 //환경변수 관련
+<<<<<<< HEAD
+const { sens } = require("../config/config.js");
+
+// 암호화를 위한 CryptoJS 모듈 설치
+const CryptoJS = require("crypto-js");
+
+// 메시지 전송 함수 작성
+// const { functionSMS } = require('functionSMS.js');
+
+const axios = require("axios");
+
+
+module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneNum) => {
+=======
 // const { sens } = require("../config");
 const { sens } = require("../config/config.js");
 
@@ -18,6 +32,7 @@ const axios = require("axios");
 
 module.exports = {
     sendAttendanceSMS: async (req, res) => {
+>>>>>>> 4f1eaaa7ceda0fe62fe99997cd744a9b06621df0
     try {
     // // 학부모전화번호, 공부방이름, 학생이름, 등원시간
     // 등원시간 저장할 row를 Schedule 테이블에서 찾잖아?
@@ -31,11 +46,15 @@ module.exports = {
       const userClassName = className; // 학원이름 User Table
       const studentName = stuName; // 학생이름 Student Table
       const stuAttendance = attendTime; // 학생출석시간 Student Table
+<<<<<<< HEAD
+      const date = Date.now().toString(); // 날짜 string//
+=======
       const date = Date.now().toString(); // 날짜 string
 
 
     /////////////////////////////////////////////////////////////
 
+>>>>>>> 4f1eaaa7ceda0fe62fe99997cd744a9b06621df0
 
       // 환경 변수
       const sens_service_id = sens.serviceId;
@@ -58,7 +77,11 @@ module.exports = {
       hmac.update(space);
       hmac.update(url2);
       hmac.update(newLine);
+<<<<<<< HEAD
+      hmac.update(date);//
+=======
       hmac.update(date);
+>>>>>>> 4f1eaaa7ceda0fe62fe99997cd744a9b06621df0
       hmac.update(newLine);
       console.log(sens_access_key);
       hmac.update(sens_access_key);
@@ -76,6 +99,10 @@ module.exports = {
           "Contenc-type": "application/json; charset=utf-8",
           "x-ncp-iam-access-key": sens_access_key,
           "x-ncp-apigw-timestamp": date,
+<<<<<<< HEAD
+        //   "x-ncp-apigw-timestamp": new Date().toISOString(),
+=======
+>>>>>>> 4f1eaaa7ceda0fe62fe99997cd744a9b06621df0
           "x-ncp-apigw-signature-v2": signature,
         },
         data: {
@@ -90,6 +117,19 @@ module.exports = {
       })
     // .then(res => {
 
+<<<<<<< HEAD
+          console.log("response", data);
+        //   console.log("response", smsRes.data);
+        //   return res.status(200).json({ message: "SMS sent" });
+    } catch(err){
+      console.log(err);
+    //   return res.status(404).json({ message: "SMS not sent" });
+    }
+}
+
+
+
+=======
           console.log("response", smsRes.data);
           return res.status(200).json({ message: "SMS sent" });
     } catch(err){
@@ -100,6 +140,7 @@ module.exports = {
 }
 
 
+>>>>>>> 4f1eaaa7ceda0fe62fe99997cd744a9b06621df0
 // {
 //     sendAttendanceSMS: async (req, res) => { 
 //     // 환경 변수
@@ -111,4 +152,8 @@ module.exports = {
 //     // ...
     
 //   },
+<<<<<<< HEAD
 // };
+=======
+// };
+>>>>>>> 4f1eaaa7ceda0fe62fe99997cd744a9b06621df0
