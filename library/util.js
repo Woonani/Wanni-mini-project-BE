@@ -16,8 +16,7 @@ const axios = require("axios");
 
 // module.exports.sendAttendanceSMS = function(className, stuName, attendTime, phoneNum) {
 
-module.exports = {
-    sendAttendanceSMS: async (req, res) => {
+module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneNum) => {
     try {
     // // 학부모전화번호, 공부방이름, 학생이름, 등원시간
     // 등원시간 저장할 row를 Schedule 테이블에서 찾잖아?
@@ -90,14 +89,14 @@ module.exports = {
       })
     // .then(res => {
 
-          console.log("response", smsRes.data);
-          return res.status(200).json({ message: "SMS sent" });
+        //   console.log("response", smsRes.data);
+        //   return res.status(200).json({ message: "SMS sent" });
     } catch(err){
       console.log(err);
-      return res.status(404).json({ message: "SMS not sent" });
+    //   return res.status(404).json({ message: "SMS not sent" });
     }
-  },
 }
+
 
 
 // {
