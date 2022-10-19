@@ -1,22 +1,24 @@
 //환경변수 관련
-// const { sens } = require("../config");
-const { sens } = require("../config/config.js");
 
+const { sens } = require("../config/config.js");
 
 // 암호화를 위한 CryptoJS 모듈 설치
 const CryptoJS = require("crypto-js");
 
-
-
 // 메시지 전송 함수 작성
 // const { functionSMS } = require('functionSMS.js');
-// const { sens } = require("../config");
+
 const axios = require("axios");
 
 
-// module.exports.sendAttendanceSMS = function(className, stuName, attendTime, phoneNum) {
-
 module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneNum) => {
+
+
+
+<<<<<<< HEAD
+module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneNum) => {
+=======
+>>>>>>> 04afb518ce08c30a0f37b486a197972d906b4de0
     try {
     // // 학부모전화번호, 공부방이름, 학생이름, 등원시간
     // 등원시간 저장할 row를 Schedule 테이블에서 찾잖아?
@@ -30,10 +32,9 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
       const userClassName = className; // 학원이름 User Table
       const studentName = stuName; // 학생이름 Student Table
       const stuAttendance = attendTime; // 학생출석시간 Student Table
+
       const date = Date.now().toString(); // 날짜 string
 
-
-    /////////////////////////////////////////////////////////////
 
 
       // 환경 변수
@@ -57,7 +58,8 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
       hmac.update(space);
       hmac.update(url2);
       hmac.update(newLine);
-      hmac.update(date);
+      hmac.update(date);//
+
       hmac.update(newLine);
       console.log(sens_access_key);
       hmac.update(sens_access_key);
@@ -86,11 +88,18 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
            // [완니썜공부방] 김나나 학생이 등원하였습니다. - 2022/10/18/14/01/22
           messages: [{ to: `${parentsPhoneNum}`, }],
         },
-      })
+    })
     // .then(res => {
+        
+        // console.log("response", data);
 
+<<<<<<< HEAD
         //   console.log("response", smsRes.data);
         //   return res.status(200).json({ message: "SMS sent" });
+=======
+        //  console.log("response", smsRes.data);
+        //  return res.status(200).json({ message: "SMS sent" });
+>>>>>>> 04afb518ce08c30a0f37b486a197972d906b4de0
     } catch(err){
       console.log(err);
     //   return res.status(404).json({ message: "SMS not sent" });
@@ -99,6 +108,10 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04afb518ce08c30a0f37b486a197972d906b4de0
 // {
 //     sendAttendanceSMS: async (req, res) => { 
 //     // 환경 변수
@@ -110,4 +123,5 @@ module.exports.sendAttendanceSMS = async (className, stuName, attendTime, phoneN
 //     // ...
     
 //   },
+
 // };
