@@ -51,14 +51,33 @@ router.post('/:id', verifyToken, async (req, res, next) => {
                     }))
                     console.log("j : ", j)
                     // 아래 ScheduleData는 res확인 용
+                    // ScheduleData.push(
+                    //     await Schedule.create({
+                    //         lessonDate,
+                    //         stuName :  stuListData[k],
+                    //         attendTime : "출석전", 
+                    //         teachId: req.params.id,
+                    //         studentId : j.dataValues.id
+                    //     })  
+                    // )
                     ScheduleData.push(
-                        await Schedule.create({
+                        await Schedule.findOrCreate({
+                            where : {
                             lessonDate,
                             stuName :  stuListData[k],
-                            attendTime : "출석전", 
                             teachId: req.params.id,
                             studentId : j.dataValues.id
-                        })  
+                          },
+                          defaults: {attendTime : "출석전"}
+                            // lessonDate,
+                            // stuName :  stuListData[k],
+                            // attendTime : "출석전", 
+                            // teachId: req.params.id,
+                            // studentId : j.dataValues.id
+                        }) 
+                        // .then((ScheduleData,created)=>{
+                        //     console.log('check',ScheduleData.lessonDate,created)
+                        // })
                     )
                     
                 }
