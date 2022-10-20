@@ -66,9 +66,9 @@ router.post('/:id', verifyToken, async (req, res, next) => {
                             lessonDate,
                             stuName :  stuListData[k],
                             teachId: req.params.id,
-                            studentId : j.dataValues.id
+                            // studentId : j.dataValues.id  // 여기 있어도 됨!                                                                                                                                                             
                           },
-                          defaults: {attendTime : "출석전"}
+                          defaults: {attendTime : "출석전", studentId : j.dataValues.id }
                             // lessonDate,
                             // stuName :  stuListData[k],
                             // attendTime : "출석전", 
