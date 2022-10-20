@@ -15,7 +15,7 @@ const ErrorResponse = require('../utils/errorResponse')
 //{ stuName, stuGrade, school, phoneNum, etc } = req.body
 
 router.post('/:id', verifyToken, async (req, res, next) => {
-  const { stuName, stuGrade, school, phoneNum, etc } = req.body;
+  const { stuName, stuGrade, school, phoneNum, stuGender,etc } = req.body;
   try {
     if(req.decoded.id == req.params.id){
       console.log('확인해보자',req.params.id)
@@ -26,6 +26,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
         stuGrade,
         school,
         phoneNum,
+        stuGender,
         etc,
         teachId: req.params.id
       });
@@ -105,7 +106,7 @@ router
 router.patch('/:stuId', verifyToken, async (req, res, next) => {
 
   try {
-    const { stuName, stuGrade, school, phoneNum, etc } = req.body;
+    const { stuName, stuGrade, school, phoneNum, stuGender,etc } = req.body;
 
 
     await Student.update({ 
@@ -113,6 +114,7 @@ router.patch('/:stuId', verifyToken, async (req, res, next) => {
       stuGrade, 
       school,
       phoneNum,
+      stuGender,
       etc
      },
       { where: {id: req.params.stuId }}); 
