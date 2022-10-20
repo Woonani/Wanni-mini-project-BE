@@ -9,7 +9,7 @@ const Op = sequelize.Op;
 
 //알림장 생성
 router.post('/:id', verifyToken, async (req, res, next) => {
-    const {message, date } = req.body;
+    const { message, date } = req.body;
     try {
         if(req.decoded.id == req.params.id){
             console.log('확인해보자',req.params.id)
@@ -54,7 +54,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
       console.error('err',error);
       return next('err',error);
     }
-    });
+});
 
 
 //2. 읽어오기
