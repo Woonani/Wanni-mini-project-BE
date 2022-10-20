@@ -3,7 +3,8 @@ const router = express.Router();
 
 const { verifyToken } = require('../library/middlewares');
 const {  Comment } = require('../models') //Schedule, Student,
-const sequelize = require("sequelize")
+const sequelize = require("sequelize");
+const { primaryKeyAttribute } = require('../models/user');
 const Op = sequelize.Op;
 
 //알림장 생성
