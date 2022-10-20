@@ -26,7 +26,7 @@ module.exports = class Student extends Sequelize.Model {
       },
       stuGender: { // 부모연락처
         type: Sequelize.STRING(1),
-        allowNull: false,  //NotNull
+        allowNull: true,  //NotNull
         unique: false, // 형제가 다니는 경우 부모 연락처가 동일
       },
       etc: {

@@ -3,26 +3,41 @@ const router = express.Router();
 
 const { verifyToken } = require('../library/middlewares');
 const {  Comment } = require('../models') //Schedule, Student,
-const sequelize = require("sequelize")
+const sequelize = require("sequelize");
+const { primaryKeyAttribute } = require('../models/user');
 const Op = sequelize.Op;
 
 //알림장 생성
 router.post('/:id', verifyToken, async (req, res, next) => {
-    const {message,date } = req.body;
+    const {message, date } = req.body;
     try {
         if(req.decoded.id == req.params.id){
             console.log('확인해보자',req.params.id)
-      const excommnet= await Comment.findOne( {where: { date: req.body.date } });
-      if(!excommnet){
-        await Comment.create({
+    //   const excomment= await Comment.findOne( {where: { date: req.body.date } });
+      const fineComId= await Comment.findOne( {attributes : ['id'], where: { date: req.body.date, teachId:req.params.id } });
+      console.log('check',fineComId.id)
+    //   if(!excomment){
+        // await Comment.create({
+        //     message,
+        //     date,
+        //     teachId: req.params.id
+        // });
+        const newcomment = await Comment.upsert({
+            // where : {  
+           
+            //     date ,
+            //     teachId: req.params.id},
             message,
-            date,
-            teachId: req.params.id
-        });
-        res.status(201).json({ code: 201, message: "success", date : excommnet })      
-      } else {
-        res.status(401).json({message: `이미 ${date} 날짜의 데이터가 있습니다.`})
-    }
+            id : fineComId.id,
+            date ,
+            teachId: req.params.id,
+ 
+        }, );
+        res.status(201).json({ code: 201, message: "success", date : newcomment })    //excomment   
+    //   } else {
+    //     console.log(`이미 ${date} 날짜의 데이터가 있습니다.`)
+    //     res.status(401).json({message: `이미 ${date} 날짜의 데이터가 있습니다.`})
+    // }
 }else{
     res.status(401).json({message: '잘못된 접근데쓰네'})
   }
