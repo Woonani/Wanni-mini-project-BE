@@ -14,33 +14,42 @@ router.post('/:id', verifyToken, async (req, res, next) => {
         if(req.decoded.id == req.params.id){
             console.log('확인해보자',req.params.id)
     //   const excomment= await Comment.findOne( {where: { date: req.body.date } });
-      const fineComId= await Comment.findOne( {attributes : ['id'], where: { date: req.body.date, teachId:req.params.id } });
-      console.log('check',fineComId.id)
+        // console.log('check1', createCommnet)
+      
+    //   console.log('check2',fineComId.id)
     //   if(!excomment){
-        // await Comment.create({
-        //     message,
-        //     date,
-        //     teachId: req.params.id
-        // });
-        const newcomment = await Comment.upsert({
-            // where : {  
-           
-            //     date ,
-            //     teachId: req.params.id},
+       const createCommnet = await Comment.create({
             message,
-            id : fineComId.id,
-            date ,
-            teachId: req.params.id,
+            date,
+            teachId: req.params.id
+        });   
+        console.log('excommnet check',createCommnet)   
+        res.json({code : 200, message: "success-insert", date : createCommnet })
+        // }
+    //     else{
+    //         const fineComId= await Comment.findOne( {where: { date:req.body.date, teachId:req.params.id } }); //attributes : ['id']
+    //   console.log('check',fineComId)
+    //     const newcomment = await Comment.update({
+    //         where : {  
+    //             id : fineComId.id,
+    //         },
+    //         //     date ,
+    //         //     teachId: req.params.id},
+    //         message,
+
+    //         date ,
+    //         teachId: req.params.id,
  
-        }, );
-        res.status(201).json({ code: 201, message: "success", date : newcomment })    //excomment   
+    //     }, );
+    //     res.status(201).json({ code: 201, message: "success-update", date : newcomment })    //excomment   
+    // }
     //   } else {
     //     console.log(`이미 ${date} 날짜의 데이터가 있습니다.`)
     //     res.status(401).json({message: `이미 ${date} 날짜의 데이터가 있습니다.`})
     // }
-}else{
-    res.status(401).json({message: '잘못된 접근데쓰네'})
-  }
+    }else{
+        res.status(401).json({message: '잘못된 접근데쓰네'})
+    }
 } catch (error) {
       console.error('err',error);
       return next('err',error);
