@@ -24,10 +24,10 @@ module.exports = class Student extends Sequelize.Model {
         allowNull: false,  //NotNull
         unique: false, // 형제가 다니는 경우 부모 연락처가 동일
       },
-      stuGender: { // 부모연락처
+      stuGender: { // 학생 성별
         type: Sequelize.STRING(1),
-        allowNull: true,  //NotNull
-        unique: false, // 형제가 다니는 경우 부모 연락처가 동일
+        allowNull: true,  // 나중에 NotNull로 바꾸기 
+        unique: false, 
       },
       etc: {
         type: Sequelize.STRING(500),
