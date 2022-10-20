@@ -389,37 +389,7 @@ router.delete('/:id/date', verifyToken, async (req, res)=>{
     } 
     })
 //특정 날짜 특정 학생
-    router.delete('/:id/date', verifyToken, async (req, res)=>{
-    
-        try {   
-            if(req.decoded.id == req.params.id){
-    
-                const {deleteDate} = req.body       
-                const deletedResult = await Schedule.destroy(
-                    {where: {
-                        teachId: req.params.id, 
-                        // 날짜 검색 일부만 도 가능
-                        lessonDate : {[Op.like]: "%" + deleteDate + "%"} 
-                    }
-                    });
-                console.log(deletedResult) // 삭제된 로우의 갯수가 나옴
-    
-                if(deletedResult>0){
-                    res.json({
-                        code: 200,
-                        message: '출석부 삭제 완료',
-                    })
-                }else {
-                    res.status(400).send(" 삭제할 출석부가 없습니다.")
-                }
-            }else{
-                res.status(401).json({message: '토큰과 사용자가 일치하지 않습니다.'})//잘못된 접근데쓰네'})
-            }
-    
-        } catch (error) {
-          console.error(error);
-        } 
-        })
+
     
 
 
