@@ -7,7 +7,7 @@ module.exports = class Student extends Sequelize.Model {
       stuName: {
         type: Sequelize.STRING(20),
         allowNull: false,  //NotNull
-        unique: true,  // Unique
+        unique: false,  
       },
       stuGrade: {
         type: Sequelize.INTEGER,//.UNSIGNED,
@@ -26,7 +26,7 @@ module.exports = class Student extends Sequelize.Model {
       },
       stuGender: { // 학생 성별
         type: Sequelize.STRING(1),
-        allowNull: true,  // 나중에 NotNull로 바꾸기 
+        allowNull: false,  // 나중에 NotNull로 바꾸기 
         unique: false, 
       },
       etc: {

@@ -18,7 +18,7 @@ const smsUtil = require('../library/util.js')
 // req.body => {
 //     "lessonDate" : "2022/10/17/14:00:00",
 //     "stuList" : "학생1,학생2,학생3"
-// } req 요청 횟수가 많을수록 느려진다!!
+// } 
 // daySchedule : [{ "lessonDate" : "2022/10/1714:00", "stuList" : "a,b,c"},
 //                { "lessonDate" : "2022/10/17/15:00", "stuList" : "a,b,c"}]
 router.post('/:id', verifyToken, async (req, res, next) => {
@@ -50,7 +50,7 @@ router.post('/:id', verifyToken, async (req, res, next) => {
                             teachId : req.params.id,
                             stuName : stuListData[k] }
                     }))
-                    console.log("j : ", j)
+                    console.log("j : ", j) //j는 학생아이디로 findStuId 로 수정할 예정
                     // 아래 ScheduleData는 res확인 용
                     // ScheduleData.push(
                     //     await Schedule.create({
@@ -70,15 +70,9 @@ router.post('/:id', verifyToken, async (req, res, next) => {
                             // studentId : j.dataValues.id  // 여기 있어도 됨!                                                                                                                                                             
                           },
                           defaults: {attendTime : "출석전", studentId : j.dataValues.id }
-                            // lessonDate,
-                            // stuName :  stuListData[k],
-                            // attendTime : "출석전", 
-                            // teachId: req.params.id,
-                            // studentId : j.dataValues.id
+                       
                         }) 
-                        // .then((ScheduleData,created)=>{
-                        //     console.log('check',ScheduleData.lessonDate,created)
-                        // })
+                    
                     )
                     
                 }
@@ -110,7 +104,7 @@ res.status(400).json({ success: false, message : '학생정보를 불러올 수 
 
     
 // Read 1 - 출석부에 뿌려주기 
-// GET schedule/:id/today
+// POST schedule/:id/today
 router.post('/:id/today', verifyToken, async (req, res, next) => {
 // 
     try {
@@ -124,7 +118,11 @@ router.post('/:id/today', verifyToken, async (req, res, next) => {
                     teachId : req.params.id, 
                     // 날짜 검색 일부만 도 가능
                     lessonDate : {[Op.like]: "%" + lessonDate + "%"}   
-                }
+                },
+                include: [
+                    {   model: Student,
+                        attributes: ['stuGender'] }
+                    ]                    
                 })
             if (todaySchedule){
                 res.status(200).json({ success: true, data: todaySchedule })
