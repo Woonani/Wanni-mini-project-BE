@@ -14,6 +14,11 @@ module.exports = class Comment extends Sequelize.Model {
         allowNull: false,   //NotNull
         unique: false,
         },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     }, {
       sequelize,
       timestamps: false,
