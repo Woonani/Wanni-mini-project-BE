@@ -12,9 +12,10 @@
 
 ├── config
 
-
 │   └── config.js                 # cors 설정 파일
+
 ├── lib                               # 자체 제작한 라이브러리 모음 폴더
+
 │   ├── logger.js                 # 로그처리용 유틸
 │   ├── middleware.js          # 미들웨어 함수 모음
 │   └── util.js                      # 출석 문자송신 함수 모음
