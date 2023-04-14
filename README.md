@@ -61,6 +61,7 @@
 `c:\\Workspace`
 ```console
 > cd C:\\Workspace
+```
 
 ## node.js 설치
 version: v14.15.4
@@ -102,6 +103,8 @@ version: v14.15.4
 ### nodemon을 통한 node서비스 실행
 
 이제 앞으로 개발할때에는 다음과 같이 `nodemon`을 통해 실행 시키도록 한다.
+
 ```
 > npm run start
+
 ```
