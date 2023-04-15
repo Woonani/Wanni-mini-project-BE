@@ -11,16 +11,20 @@
 # 전체 구조
 
 ├── config
-
 │   └── config.js                 # cors 설정 파일
 
 ├── lib                               # 자체 제작한 라이브러리 모음 폴더
 
 │   ├── logger.js                 # 로그처리용 유틸
+
 │   ├── middleware.js          # 미들웨어 함수 모음
+
 │   └── util.js                      # 출석 문자송신 함수 모음
+
 ├── log                              # 로그 폴더
+
 │   └── ...
+
 ├── models                         # DB를 모델링하는 sequelize의 모델 함수용 폴더
 │   ├── connection.js           # DB연결 처리 함수
 │   ├── comment.js
