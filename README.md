@@ -86,7 +86,7 @@
 └── README.md
 
 ## 최종 DB 생성 후 ERD
-
+![Untitled](https://user-images.githubusercontent.com/86226500/232309483-26a565a4-109a-412f-bfdd-ab8ed80dd95d.png)
 
 ## 순서도
 
