@@ -89,7 +89,7 @@
 ![Untitled](https://user-images.githubusercontent.com/86226500/232309483-26a565a4-109a-412f-bfdd-ab8ed80dd95d.png)
 
 ## 순서도
-
+![Untitled (1)](https://user-images.githubusercontent.com/86226500/232309775-1c1e769f-cd1e-4d6f-a279-09dbab9b2571.png)
 
 ## 시작
 디렉토리 이동
