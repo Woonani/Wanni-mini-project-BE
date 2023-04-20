@@ -8,82 +8,10 @@
 
   주기능은 학생의 등원시간을 기록해주는 출결관리와 등원알림 문자 서비스 입니다.
   부가적으로 학생정보관리, 학원 시간표관리, 출결기록 조회, 메모 서비스를 제공합니다.
-  UI 적으로 신경쓴 점 : 간결한 디자인, 선명한 글씨, 시각적인 출결현황 화면구현
+  UI 적으로 신경쓴 점 :  40대 선생님 사용자 맞춤 화면 구성(간결한 디자인, 선명한 글씨), 초등학생 맞춤 시각적인 출석확인 화면구현
   기능적으로 신경쓴 점 : 학생 검색 기능, 출석 히스토리 제공
 
-# 전체 구조
 
-├── config
-
-│   └── config.js                 # cors 설정 파일
-
-├── lib                               # 자체 제작한 라이브러리 모음 폴더
-
-│   ├── logger.js                 # 로그처리용 유틸
-
-│   ├── middleware.js          # 미들웨어 함수 모음
-
-│   └── util.js                      # 출석 문자송신 함수 모음
-
-├── log                              # 로그 폴더
-
-│   └── ...
-
-├── models                         # DB를 모델링하는 sequelize의 모델 함수용 폴더
-
-│   ├── connection.js           # DB연결 처리 함수
-
-│   ├── comment.js
-
-│   ├── schedule.js
-
-│   ├── student.js
-
-│   ├── index.js                    # sequelize를 이용한 DB설정 파일
-
-│   └── user.js
-
-├── node_modules                # npm install후 생성되는 라이브러리 모음 폴더
-
-│   └── ...
-
-├── routes                           # Router 폴더
-
-│   ├── auth.js
-
-│   ├── comment.js
-
-│   ├── pwCheck.js
-
-│   ├── schedule.js
-
-│   ├── students.js
-
-│   ├── index.js                    # Router 설정 인덱스 파일
-
-│   └── user.js
-
-├── utils                              # error 처리용 유틸
-
-│   └── errorResponse.js
-
-├── views                            # express에서 생성한 프론트용 화면(사용하지 않음)
-
-│   ├── error.html
-
-│   └── sequelize.html
-
-├── .env                              # (개발용)환경설정 파일(직접 생성)
-
-├── .gitignore
-
-├── app.js                           # 앱 실행 메인 파일
-
-├── package-lock.json
-
-├── package.json
-
-└── README.md
 
 ## 최종 DB 생성 후 ERD
 ![Untitled](https://user-images.githubusercontent.com/86226500/232309483-26a565a4-109a-412f-bfdd-ab8ed80dd95d.png)
